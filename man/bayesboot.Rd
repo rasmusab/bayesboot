@@ -2,7 +2,7 @@
 % Please edit documentation in R/bayesboot.R
 \name{bayesboot}
 \alias{bayesboot}
-\title{bayes_boot}
+\title{bayesboot}
 \usage{
 bayesboot(data, statistic, n1 = 1000, n2 = 1000, use_weights = FALSE,
   weight_arg = NULL, ...)
@@ -11,6 +11,6 @@ bayesboot(data, statistic, n1 = 1000, n2 = 1000, use_weights = FALSE,
 \item{...}{}
 }
 \description{
-bayes_boot
+bayesboot
 }
 
