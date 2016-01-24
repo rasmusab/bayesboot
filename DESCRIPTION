@@ -11,4 +11,6 @@ Description: Functions for performing the Bayesian bootstrap as introduced by
 License: License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 5.0.1
+Imports: plyr (>= 1.8.3)
+Depends: R (>= 3.2.0)
 Suggests: testthat
