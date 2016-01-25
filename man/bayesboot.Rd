@@ -2,15 +2,79 @@
 % Please edit documentation in R/bayesboot.R
 \name{bayesboot}
 \alias{bayesboot}
-\title{bayesboot}
+\title{Bayesian bootstrap}
 \usage{
-bayesboot(data, statistic, n1 = 1000, n2 = 1000, use_weights = FALSE,
-  weight_arg = NULL, ...)
+bayesboot(data, statistic, R = 1000, R2 = 1000, use.weights = FALSE,
+  .progress = "none", .parallel = FALSE, ...)
 }
 \arguments{
-\item{...}{}
+\item{data}{Either a vector or a list, or a matrix or a data.frame with one
+datapoint per row. The format of \code{data} should be compatible with the
+first argument of \code{statistic}}
+
+\item{statistic}{A function implementing the statistic of interest where the
+first argument should take the data. If \code{use.weights = TRUE} then the
+second argument should take a vector of weights.}
+
+\item{R}{The size of the posterior sample from the Bayesian bootstrap.}
+
+\item{R2}{When \code{use.weights = FALSE} this is the size of the resample of
+the data used to approximate the weighted statistic.}
+
+\item{use.weights}{When \code{TRUE} the data will be reweighted, like in the
+original Bayesian bootstrap When \code{FALSE} (the default) the reweighting
+will be approximated by resampling the data.}
+
+\item{.progress}{The type of progress bar. See the \code{.progress} argument
+to \code{\link[plyr]{adply}} in the plyr package.}
+
+\item{.parallel}{If \code{TRUE} enables parallel processing. See the
+\code{.parallel} argument to \code{\link[plyr]{adply}} in the plyr package.}
+
+\item{...}{Other arguments passed on to \code{statistic}}
+}
+\value{
+A \code{data.frame} with \code{R} rows, each row being a draw from
+  the posterior distribution of the Bayesian bootstrap. The number of columns
+  is decided by the length of the output from \code{statistic}. While the
+  output is a \code{data.frame} it has subclass \code{bayesboot} which
+  enables specialized \code{\link{summary}} and \code{\link{plot}} functions
+  for the result of a \code{bayesboot} call.
 }
 \description{
-bayesboot
+Performs a Bayesian bootstrap and returns a \code{data.frame} with a sample
+of size \code{R} representing the posterior distribution of the, (possibly
+multivariate), statistic.
+}
+\details{
+The statistic is a function of the data that represents a feature of
+interest, where a typical statistic is the mean. In \code{bayesboot} it is
+most efficient to define the statistic as a function taking the data as the
+first argument and a vector of weights as the second argument. An example of
+such a function is \code{\link{weighted.mean}}. Indicate that you are using a
+statistic defined in this way by setting \code{use.weights = TRUE}.
+
+It is also possible to define the statistic as a function only taking data
+(and no weights) by having \code{use.weights = FALSE} (the default). This
+will, for each of the \code{R} Bayesian bootstrap draws, give a resampled
+version of the \code{data} of size \code{R2} to \code{statistic}. This will
+be much slower than using \code{use.weights = TRUE} but will work with a
+larger range of statistics (\code{\link{median}}, for example)
+
+\emph{Note 1}: While \code{R} and \code{R2} are set to \code{1000} by default,
+that should not be taken to indicate that a sample of size 1000 is sufficient nor recommended.
+
+\emph{Note 2}: When using \code{use.weights = FALSE} it is important to use
+a statistic that does not depend on the sample size. That is, doubling the size of a dataset by cloning data
+should result in the same statistic as the original dataset. An example of a statistic that depends on
+the sample size is the sample standard deviation (that is, \code{\link{sd}}), and when using \code{bayesboot} it
+would make more sense to use the population standard deviation (see examples below).
+}
+\examples{
+# A function calculating the population standard deviation.
+pop.sd <- function(x) {
+  n <- length(x)
+  sd(x) * sqrt( (n - 1) / n)
+}
 }
 

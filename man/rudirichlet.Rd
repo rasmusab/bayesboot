@@ -15,16 +15,25 @@ rudirichlet(n, d)
 An \code{n} by \code{d} matrix.
 }
 \description{
-\code{rudirichlet} produces \code{n} draws from a \code{d}-dimensional uniform Dirichlet distribution.
-Here "uniform" implies that any combination of values on the support of the distribution is equally likely,
-that is, the \eqn{\alpha} parameters to the Dirichlet distribution are all set to 1.0.
+\code{rudirichlet} produces \code{n} draws from a \code{d}-dimensional
+uniform Dirichlet distribution. Here "uniform" implies that any combination
+of values on the support of the distribution is equally likely, that is, the
+\eqn{\alpha} parameters to the Dirichlet distribution are all set to 1.0.
+}
+\details{
+In the context of the Bayesian bootstrap \code{rudirichlet} is used to
+produces the bootstrap weights. Therefore, \code{rudirichlet} can be used if
+you directly want to generate Bayesian bootstrap weights.
 }
 \examples{
+set.seed(123)
 rudirichlet(2, 3)
-# Should produce the following matrix, but with different numbers, of course:
-#        [,1]     [,2]   [,3]
-# [1,] 0.7109 0.001012 0.2881
-# [2,] 0.2112 0.491784 0.2970
+# Should produce the following matrix:
+#       [,1]   [,2]   [,3]
+# [1,] 0.30681 0.2097 0.4834
+# [2,] 0.07811 0.1390 0.7829
 
+# The above could be seen as a sample of two Bayesian bootstrap weights for a
+dataset of size three.
 }
 
