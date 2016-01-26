@@ -37,6 +37,7 @@ rudirichlet <- function(n, d) {
 }
 
 # From the examples on the help page for base::is.integer
+
 is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
   abs(x - round(x)) < tol
 }
@@ -183,9 +184,6 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
   }
 
   if(use.weights) {
-    if(length(R2) != 1 || !is.wholenumber(R2) || R2 < 1) {
-      stop("If use.weights == TRUE then R2 should be a single whole number >= 1.")
-    }
     if (length(formals(statistic)) < 2) {
       stop("If use.weights == TRUE then statistic should take a weight vector as the second argument.")
     }
@@ -197,6 +195,9 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
       }
     )
   } else { # use.weights == FALSE
+    if(length(R2) != 1 || is.na(R2) || !is.wholenumber(R2) || R2 < 1) {
+      stop("If use.weights == FALSE then R2 should be a single whole number >= 1.")
+    }
     tryCatch(stat.result <- statistic(data),
       error = function(e) {
         message("Applying the statistic on the original data resulted in an error")
@@ -226,7 +227,7 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
     )
 
   } else {
-    if(is.atomic(x) || is.list(x)) { # data is a list type of object
+    if(is.null(dim(data)) || length(dim(data)) < 2) { # data is a list type of object
       boot.sample <- plyr::adply(
         dirichlet.weights, 1, .progress = .progress, .parallel = .parallel, .id = NULL,
         .fun = function(weights) {
@@ -249,4 +250,8 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
   boot.sample
 }
 
-
+  d <- data.frame(x = 1:10, y = rnorm(10))
+  boot_stat <- function(d) {
+    coef(lm(y ~ x, data = d))
+  }
+  b3 <- bayesboot(d, boot_stat, R = 75, R2 = 100, use.weights = FALSE)
