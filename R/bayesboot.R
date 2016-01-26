@@ -168,6 +168,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' @export
 bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
                       .progress = "none", .parallel = FALSE, ...) {
+  call <- match.call()
   # Pick out the first part of statistic matching a legal variable name,
   # just to be used as a label when plotting later.
   statistic.label <- deparse(substitute(statistic))
@@ -247,11 +248,46 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
   }
   class(boot.sample) <- c("bayesboot", class(boot.sample))
   attr(boot.sample, "statistic.label") <- statistic.label
+  attr(boot.sample, "call") <- call
   boot.sample
 }
 
-  d <- data.frame(x = 1:10, y = rnorm(10))
-  boot_stat <- function(d) {
-    coef(lm(y ~ x, data = d))
-  }
-  b3 <- bayesboot(d, boot_stat, R = 75, R2 = 100, use.weights = FALSE)
+#' @export
+summary.bayesboot <- function(object, ...) {
+  bootsum <- ldply(seq_len(ncol(object)), function(i) {
+    s <- object[,i]
+    data.frame(statistic   = names(object)[i],
+               measure   = c("mean", "sd", "q2.5%", "q25%", "median" ,"q75%", "q97.5%"),
+               value   = c(mean(s), sd(s), quantile(s, c(0.025, 0.25, 0.5, 0.75, 0.975))))
+  })
+  attr(bootsum, "statistic.label") <- attr(object, "statistic.label")
+  attr(bootsum, "call") <- attr(object, "call")
+  attr(bootsum, "R") <- nrow(object)
+  class(bootsum) <- c("summary.bayesboot", class(bootsum))
+  bootsum
+}
+
+#' @method print summary.bayesboot
+#' @export
+print.summary.bayesboot <- function(x, ...) {
+  stat.table <- ddply(x, "statistic", function(s) {
+    stats <- s$value
+    names(stats) <- s$measure
+    stats
+  })
+  cat("Bayesian bootstrap\n")
+  cat("\n")
+  cat("Number of posterior draws:", attr(x, "R") , "\n")
+  cat("\n")
+  cat("Summary of the posterior:\n")
+  print(stat.table, row.names = FALSE)
+  cat("\n")
+  cat("Call:\n", format(attr(x, "call")))
+}
+
+
+#' @export
+plot.bayesboot <- function(x, ...) {
+  plot(x)
+}
+

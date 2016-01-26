@@ -4,7 +4,7 @@
 \alias{bayesboot}
 \title{The Bayesian bootstrap}
 \usage{
-bayesboot(data, statistic, R = 1000, R2 = 1000, use.weights = FALSE,
+bayesboot(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
   .progress = "none", .parallel = FALSE, ...)
 }
 \arguments{
@@ -63,8 +63,8 @@ version of the \code{data} of size \code{R2} to \code{statistic}. This will
 be much slower than using \code{use.weights = TRUE} but will work with a
 larger range of statistics (\code{\link{median}}, for example)
 
-\emph{Note 1}: While \code{R} and \code{R2} are set to \code{1000} by
-default, that should not be taken to indicate that a sample of size 1000 is
+\emph{Note 1}: While \code{R} and \code{R2} are set to \code{4000} by
+default, that should not be taken to indicate that a sample of size 4000 is
 sufficient nor recommended.
 
 \emph{Note 2}: When using \code{use.weights = FALSE} it is important to use a
@@ -81,9 +81,9 @@ deviation (see examples below).
 
 # Heights of the last ten American presidents in cm (Kennedy to Obama).
 heights <- c(183, 192, 182, 183, 177, 185, 188, 188, 182, 185);
-b1 <- bayesboot(heights, mean, R = 5000)
+b1 <- bayesboot(heights, mean)
 # But it's more efficient to use the a weighted statistic.
-b2 <- bayesboot(heights, weighted.mean, R = 5000, use.weights = TRUE)
+b2 <- bayesboot(heights, weighted.mean, use.weights = TRUE)
 
 # The result of bayesboot can be plotted and summarized
 plot(b2)
@@ -101,9 +101,9 @@ pop.sd <- function(x) {
   sd(x) * sqrt( (n - 1) / n)
 }
 
-b3 <- bayesboot(heights, pop.sd, R = 5000)
+b3 <- bayesboot(heights, pop.sd)
 
- ### A Bayesian bootstrap analysis of a correlation coefficient ###
+### A Bayesian bootstrap analysis of a correlation coefficient ###
 
 # Data comparing two methods of measuring blood flow.
 # From Table 1 in Miller (1974) and used in an example
