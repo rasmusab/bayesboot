@@ -51,3 +51,5 @@ test_that("bayesboot produces a valid output", {
     TRUE
   })
 })
+
+

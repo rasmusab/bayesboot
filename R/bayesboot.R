@@ -291,3 +291,24 @@ plot.bayesboot <- function(x, ...) {
   plot(x)
 }
 
+#' Coerce to a bayesboot object
+#'
+#' This converts an object into a data frame and adds the class \code{bayesboot}.
+#' Doing this is only usful in the case you would want to use the plot and summary methods
+#' for \code{bayesboot} objects.
+#'
+#' @param object Any object that can be converted to a data frame.
+#'
+#' @return A \code{data.frame} with subclass \code{bayesboot}.
+#' @export
+as.bayesboot <- function(object) {
+  object <- as.data.frame(object)
+  class(object) <- c("bayesboot", class(object))
+  if(is.null(attr(object, "statistic.label"))) {
+    attr(object, "statistic.label") <- ""
+  }
+  if(is.null(attr(object, "call"))) {
+    attr(object, "call") <- ""
+  }
+  object
+}

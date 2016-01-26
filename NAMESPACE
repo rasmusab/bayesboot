@@ -3,5 +3,6 @@
 S3method(plot,bayesboot)
 S3method(print,summary.bayesboot)
 S3method(summary,bayesboot)
+export(as.bayesboot)
 export(bayesboot)
 export(rudirichlet)
