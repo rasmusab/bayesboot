@@ -58,11 +58,11 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 
 
 
-#' Bayesian bootstrap
+#' The Bayesian bootstrap
 #'
 #' Performs a Bayesian bootstrap and returns a \code{data.frame} with a sample
 #' of size \code{R} representing the posterior distribution of the (possibly
-#' multivariate) statistic.
+#' multivariate) \code{statistic}.
 #'
 #' The statistic is a function of the data that represents a feature of
 #' interest, where a typical statistic is the mean. In \code{bayesboot} it is
@@ -78,14 +78,17 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' be much slower than using \code{use.weights = TRUE} but will work with a
 #' larger range of statistics (\code{\link{median}}, for example)
 #'
-#' \emph{Note 1}: While \code{R} and \code{R2} are set to \code{1000} by default,
-#' that should not be taken to indicate that a sample of size 1000 is sufficient nor recommended.
+#' \emph{Note 1}: While \code{R} and \code{R2} are set to \code{4000} by
+#' default, that should not be taken to indicate that a sample of size 4000 is
+#' sufficient nor recommended.
 #'
-#' \emph{Note 2}: When using \code{use.weights = FALSE} it is important to use
-#' a statistic that does not depend on the sample size. That is, doubling the size of a dataset by cloning data
-#' should result in the same statistic as the original dataset. An example of a statistic that depends on
-#' the sample size is the sample standard deviation (that is, \code{\link{sd}}), and when using \code{bayesboot} it
-#' would make more sense to use the population standard deviation (see examples below).
+#' \emph{Note 2}: When using \code{use.weights = FALSE} it is important to use a
+#' statistic that does not depend on the sample size. That is, doubling the size
+#' of a dataset by cloning data should result in the same statistic as the
+#' original dataset. An example of a statistic that depends on the sample size
+#' is the sample standard deviation (that is, \code{\link{sd}}), and when using
+#' \code{bayesboot} it would make more sense to use the population standard
+#' deviation (see examples below).
 #'
 #'
 #' @param data Either a vector or a list, or a matrix or a data.frame with one
@@ -98,8 +101,8 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' @param R2 When \code{use.weights = FALSE} this is the size of the resample of
 #'   the data used to approximate the weighted statistic.
 #' @param use.weights When \code{TRUE} the data will be reweighted, like in the
-#'   original Bayesian bootstrap. When \code{FALSE} (the default) the reweighting
-#'   will be approximated by resampling the data.
+#'   original Bayesian bootstrap. When \code{FALSE} (the default) the
+#'   reweighting will be approximated by resampling the data.
 #' @param .progress The type of progress bar. See the \code{.progress} argument
 #'   to \code{\link[plyr]{adply}} in the plyr package.
 #' @param .parallel If \code{TRUE} enables parallel processing. See the
@@ -108,19 +111,61 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'
 #' @return A \code{data.frame} with \code{R} rows, each row being a draw from
 #'   the posterior distribution of the Bayesian bootstrap. The number of columns
-#'   is decided by the length of the output from \code{statistic}. While the
-#'   output is a \code{data.frame} it has subclass \code{bayesboot} which
-#'   enables specialized \code{\link{summary}} and \code{\link{plot}} functions
-#'   for the result of a \code{bayesboot} call.
+#'   is decided by the length of the output from \code{statistic}. If
+#'   \code{statistic} does not return a vector or data frame with named values
+#'   then the columns will be given the names \code{V1}, \code{V2}, \code{V3},
+#'   etc. While the output is a \code{data.frame} it has subclass
+#'   \code{bayesboot} which enables specialized \code{\link{summary}} and
+#'   \code{\link{plot}} functions for the result of a \code{bayesboot} call.
 #'
 #' @examples
+#'
+#' ### A Bayesian bootstrap analysis of a mean ###
+#'
+#' # Heights of the last ten American presidents in cm (Kennedy to Obama).
+#' heights <- c(183, 192, 182, 183, 177, 185, 188, 188, 182, 185);
+#' b1 <- bayesboot(heights, mean)
+#' # But it's more efficient to use the a weighted statistic.
+#' b2 <- bayesboot(heights, weighted.mean, use.weights = TRUE)
+#'
+#' # The result of bayesboot can be plotted and summarized
+#' plot(b2)
+#' summary(b2)
+#'
+#' # It can also be easily post processed.
+#' # Here the probability that the mean is > 182 cm.
+#' mean( b2[,1] > 182)
+#'
+#' ### A Bayesian bootstrap analysis of a SD ###
+#'
 #' # A function calculating the population standard deviation.
 #' pop.sd <- function(x) {
 #'   n <- length(x)
 #'   sd(x) * sqrt( (n - 1) / n)
 #' }
+#'
+#' b3 <- bayesboot(heights, pop.sd)
+#'
+#' ### A Bayesian bootstrap analysis of a correlation coefficient ###
+#'
+#' # Data comparing two methods of measuring blood flow.
+#' # From Table 1 in Miller (1974) and used in an example
+#' # by Rubin (1981, p. 132).
+#' blood.flow <- data.frame(
+#'   dye = c(1.15, 1.7, 1.42, 1.38, 2.80, 4.7, 4.8, 1.41, 3.9),
+#'   efp = c(1.38, 1.72, 1.59, 1.47, 1.66, 3.45, 3.87, 1.31, 3.75))
+#'
+#' # Using the weighted correlation from the boot package.
+#' b4 <- bayesboot(blood.flow, boot::corr, R = 1000, use.weights = TRUE)
+#' hist(b[,1])
+#'
+#'
+#' @references
+#' Miller, R. G. (1974) The jackknife-a review. \emph{Biometrika}, \bold{61(1)}, 1--15.
+#'
+#' Rubin, D. B. (1981). The bayesian bootstrap. \emph{The annals of statistics}, \bold{9(1)}, 130--134.
 #' @export
-bayesboot <- function(data, statistic, R = 1000, R2 = 1000, use.weights = FALSE,
+bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
                       .progress = "none", .parallel = FALSE, ...) {
   # Pick out the first part of statistic matching a legal variable name,
   # just to be used as a label when plotting later.
