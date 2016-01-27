@@ -8,7 +8,7 @@ Description: Functions for performing the Bayesian bootstrap as introduced by
     Rubin (1981) and for summarizing the result. The implementation can both handle
     statistics that works on the a weighted version of the data or that works on
     resampled data set.
-License: License: MIT + file LICENSE
+License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 5.0.1
 Imports: plyr (>= 1.8.3)
