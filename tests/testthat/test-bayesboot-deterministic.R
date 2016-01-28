@@ -44,10 +44,10 @@ test_that("bayesboot produces a valid output", {
     summary(b3)
     summary(b4)
 
-    #plot(b1)
-    #plot(b2)
-    #plot(b3)
-    #plot(b4)
+    plot(b1)
+    plot(b2)
+    plot(b3)
+    plot(b4)
     TRUE
   })
 })
