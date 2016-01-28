@@ -62,18 +62,21 @@ will, for each of the \code{R} Bayesian bootstrap draws, give a resampled
 version of the \code{data} of size \code{R2} to \code{statistic}. This will
 be much slower than using \code{use.weights = TRUE} but will work with a
 larger range of statistics (\code{\link{median}}, for example)
-
-\emph{Note 1}: While \code{R} and \code{R2} are set to \code{4000} by
+}
+\note{
+\itemize{
+\item  While \code{R} and \code{R2} are set to \code{4000} by
 default, that should not be taken to indicate that a sample of size 4000 is
 sufficient nor recommended.
 
-\emph{Note 2}: When using \code{use.weights = FALSE} it is important to use a
+\item When using \code{use.weights = FALSE} it is important to use a
 statistic that does not depend on the sample size. That is, doubling the size
 of a dataset by cloning data should result in the same statistic as the
 original dataset. An example of a statistic that depends on the sample size
 is the sample standard deviation (that is, \code{\link{sd}}), and when using
 \code{bayesboot} it would make more sense to use the population standard
 deviation (see examples below).
+}
 }
 \examples{
 

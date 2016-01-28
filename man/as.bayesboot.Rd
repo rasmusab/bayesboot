@@ -2,7 +2,7 @@
 % Please edit documentation in R/bayesboot.R
 \name{as.bayesboot}
 \alias{as.bayesboot}
-\title{Convert an object to a bayesboot object}
+\title{Coerce to a bayesboot object}
 \usage{
 as.bayesboot(object)
 }
@@ -13,7 +13,7 @@ as.bayesboot(object)
 A \code{data.frame} with subclass \code{bayesboot}.
 }
 \description{
-This converts an object into a dataframe and adds the class \code{bayesboot}.
+This converts an object into a data frame and adds the class \code{bayesboot}.
 Doing this is only usful in the case you would want to use the plot and summary methods
 for \code{bayesboot} objects.
 }

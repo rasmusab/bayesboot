@@ -76,7 +76,6 @@ In that package there is support for calculating the hdi on more data types
 than just vectors, matrices, and data frames.
 }
 \examples{
-
 # for a vector:
 tst <- rgamma(1e5, 2.5, 2)
 hdi(tst)

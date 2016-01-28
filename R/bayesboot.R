@@ -37,7 +37,6 @@ rudirichlet <- function(n, d) {
 }
 
 # From the examples on the help page for base::is.integer
-
 is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
   abs(x - round(x)) < tol
 }
@@ -79,18 +78,19 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' be much slower than using \code{use.weights = TRUE} but will work with a
 #' larger range of statistics (\code{\link{median}}, for example)
 #'
-#' \emph{Note 1}: While \code{R} and \code{R2} are set to \code{4000} by
+#' @note \itemize{
+#' \item  While \code{R} and \code{R2} are set to \code{4000} by
 #' default, that should not be taken to indicate that a sample of size 4000 is
 #' sufficient nor recommended.
 #'
-#' \emph{Note 2}: When using \code{use.weights = FALSE} it is important to use a
+#' \item When using \code{use.weights = FALSE} it is important to use a
 #' statistic that does not depend on the sample size. That is, doubling the size
 #' of a dataset by cloning data should result in the same statistic as the
 #' original dataset. An example of a statistic that depends on the sample size
 #' is the sample standard deviation (that is, \code{\link{sd}}), and when using
 #' \code{bayesboot} it would make more sense to use the population standard
 #' deviation (see examples below).
-#'
+#' }
 #'
 #' @param data Either a vector or a list, or a matrix or a data.frame with one
 #'   datapoint per row. The format of \code{data} should be compatible with the
@@ -172,8 +172,8 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
   # Pick out the first part of statistic matching a legal variable name,
   # just to be used as a label when plotting later.
   statistic.label <- deparse(substitute(statistic))
-  match <- regexpr("^(\\w|\\.|_)*", "function <- fun")
-  statistic.label <- regmatches(statistic.label, match)
+  match <- regexpr("^(\\w|\\.|_)*", statistic.label[1])
+  statistic.label <- regmatches(statistic.label[1], match)
 
   # Doing some error checks
   if(length(R) != 1 || !is.wholenumber(R) || R < 1) {
@@ -252,17 +252,37 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
   boot.sample
 }
 
+
+#' Summarize the result of \code{bayesboot}
+#'
+#' Summarizes the result of a call to \code{bayesboot} by calulating means, SDs,
+#' highest density intervals and quantiles of the posterior marginals.
+#'
+#' @param object The bayesboot object to summarize.
+#' @param cred.mass The probability mass to include in the highest density intervals.
+#' @param ... Not used.
+#'
+#' @return A data frame with three columns: (1) \bold{statistic} the name of the
+#'   statistic, (2) \bold{measure} the name of the summarizing measure, and (3)
+#'   \bold{value} the value of the summarizing measure.
+#'
 #' @export
-summary.bayesboot <- function(object, ...) {
+summary.bayesboot <- function(object, cred.mass = 0.95, ...) {
   bootsum <- ldply(seq_len(ncol(object)), function(i) {
     s <- object[,i]
+    if(!is.numeric(s)) {
+      warning(paste("The statistic", names(object)[i] , "was skipped as",
+                    "summary.bayesboot can't handle non-numeric statistics."))
+      return(data.frame())
+    }
     data.frame(statistic   = names(object)[i],
-               measure   = c("mean", "sd", "q2.5%", "q25%", "median" ,"q75%", "q97.5%"),
-               value   = c(mean(s), sd(s), quantile(s, c(0.025, 0.25, 0.5, 0.75, 0.975))))
+               measure   = c("mean", "sd", "hdi.low", "hdi.high","q2.5%", "q25%", "median" ,"q75%", "q97.5%"),
+               value   = c(mean(s), sd(s), hdi(s, cred.mass), quantile(s, c(0.025, 0.25, 0.5, 0.75, 0.975))))
   })
   attr(bootsum, "statistic.label") <- attr(object, "statistic.label")
   attr(bootsum, "call") <- attr(object, "call")
   attr(bootsum, "R") <- nrow(object)
+  attr(bootsum, "cred.mass") <- cred.mass
   class(bootsum) <- c("summary.bayesboot", class(bootsum))
   bootsum
 }
@@ -279,16 +299,14 @@ print.summary.bayesboot <- function(x, ...) {
   cat("\n")
   cat("Number of posterior draws:", attr(x, "R") , "\n")
   cat("\n")
-  cat("Summary of the posterior:\n")
-  print(stat.table, row.names = FALSE)
+  hdi.percentage <- paste0(round(attr(x, "cred.mass") * 100), "%")
+  cat("Summary of the posterior (with", hdi.percentage,"Highest Density Intervals):\n")
+  print(stat.table[,c("statistic","mean", "sd", "hdi.low", "hdi.high")], row.names = FALSE)
+  cat("\n")
+  cat("Quantiles:\n")
+  print(stat.table[,c("statistic", "q2.5%", "q25%", "median" ,"q75%", "q97.5%")], row.names = FALSE)
   cat("\n")
   cat("Call:\n", format(attr(x, "call")))
-}
-
-
-#' @export
-plot.bayesboot <- function(x, ...) {
-  plot(x)
 }
 
 #' Coerce to a bayesboot object
@@ -312,3 +330,38 @@ as.bayesboot <- function(object) {
   }
   object
 }
+
+#' Plot the result of \code{bayesboot}
+#'
+#' Produces histograms showing the marginal posterior distributions from a \code{bayesboot} call. Using the \code{\link{plotPost}} function to produce the individual histograms.
+#'
+#' @param x The bayesboot object to plot.
+#' @param cred.mass the probability mass to include in credible intervals, or NULL to suppress plotting of credible intervals.
+#' @param plots.per.page The maximum numers of plots per page.
+#' @param cex,cex.lab,... Further parameters passed on to \code{\link{plotPost}}.
+#'
+#' @export
+plot.bayesboot <- function(x, cred.mass = 0.95, plots.per.page = 3, cex = 1.2, cex.lab=1.3, ...) {
+  old.devAskNewPage <- devAskNewPage()
+  old.par <- par(mfrow = c(min(plots.per.page, ncol(x)) , 1) , mar = c(4.1, 4.1, 0.5, 4.1), mgp = c(2.5, 1, 0))
+  n.plots <- 0
+  for(i in seq_len(ncol(x))) {
+    if(!is.numeric(x[, i])) {
+      warning(paste("The statistic", names(x)[i] , "was skipped as",
+                    "plot.bayesboot can't handle non-numeric statistics."))
+      next
+    }
+    # Byta ut detta mot plotPost?
+    #hist(x[, i], breaks = "FD", xlab = names(x)[i])
+    n.plots <- n.plots + 1
+    if(n.plots > plots.per.page) {
+      devAskNewPage(TRUE)
+    }
+    plotPost(x[, i], credMass = cred.mass, xlab = names(x)[i], cex = cex, cex.lab = cex.lab, ...)
+  }
+  par(old.par)
+  devAskNewPage(old.devAskNewPage)
+  invisible(NULL)
+}
+
+

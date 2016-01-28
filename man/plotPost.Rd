@@ -56,12 +56,9 @@ above this value.
 \note{
 The origin of this function is
   \href{https://cran.r-project.org/web/packages/BEST/index.html}{the BEST
-  package} which is based on Kruschke(2015, 2013). In that package there is
-  support for calculating the hdi on more data types than just vectors,
-  matrices, and data frames.
+  package} which is based on Kruschke(2015, 2013).
 }
 \examples{
-
 # Generate some data
 tst <- rnorm(1e5, 3, 1)
 plotPost(tst)
