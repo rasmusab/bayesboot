@@ -38,18 +38,33 @@ test_that("bayesboot produces a valid output", {
   expect_equal(nrow(b4), 130)
   expect_equal(ncol(b4), 2)
 
-  expect_true({
-    summary(b1)
-    summary(b2)
-    summary(b3)
-    summary(b4)
+  # A "stranger" bootstrap analysis with the data being chars. in a list.
+  # And the statistc being the most common answer.
+  data_list <- list("Yes", "Yes", "No", "Yes", "No", "Yes", "Maybe")
+  boot_stat <- function(d) {
+    t <- table(as.character(d))
+    c(most_common_answer = names(t)[ which.max(t)])
+  }
+  b5 <- bayesboot(data_list, boot_stat, R = 50, R2 = 20)
+  expect_equal(class(b5), c("bayesboot", "data.frame"))
+  expect_equal(nrow(b5), 50)
+  expect_equal(ncol(b5), 1)
 
+
+
+  expect_output(summary(b1), ".")
+  expect_output(summary(b2), ".")
+  expect_output(summary(b3), ".")
+  expect_output(summary(b4), ".")
+  expect_warning(summary(b5))
+  expect_true({
     plot(b1)
     plot(b2)
     plot(b3)
     plot(b4)
     TRUE
   })
+  expect_warning(plot(b5))
 })
 
 

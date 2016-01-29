@@ -299,13 +299,15 @@ print.summary.bayesboot <- function(x, ...) {
   cat("\n")
   cat("Number of posterior draws:", attr(x, "R") , "\n")
   cat("\n")
-  hdi.percentage <- paste0(round(attr(x, "cred.mass") * 100), "%")
-  cat("Summary of the posterior (with", hdi.percentage,"Highest Density Intervals):\n")
-  print(stat.table[,c("statistic","mean", "sd", "hdi.low", "hdi.high")], row.names = FALSE)
-  cat("\n")
-  cat("Quantiles:\n")
-  print(stat.table[,c("statistic", "q2.5%", "q25%", "median" ,"q75%", "q97.5%")], row.names = FALSE)
-  cat("\n")
+  if(nrow(x) > 0) {
+    hdi.percentage <- paste0(round(attr(x, "cred.mass") * 100), "%")
+    cat("Summary of the posterior (with", hdi.percentage,"Highest Density Intervals):\n")
+    print(stat.table[,c("statistic","mean", "sd", "hdi.low", "hdi.high")], row.names = FALSE)
+    cat("\n")
+    cat("Quantiles:\n")
+    print(stat.table[,c("statistic", "q2.5%", "q25%", "median" ,"q75%", "q97.5%")], row.names = FALSE)
+    cat("\n")
+  }
   cat("Call:\n", format(attr(x, "call")))
 }
 
