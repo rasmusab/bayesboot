@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{The bayesboot object to summarize.}
 
-\item{cred.mass}{The probability mass to include in credible intervals}
+\item{cred.mass}{The probability mass to include in the highest density intervals.}
 
 \item{...}{Not used.}
 }

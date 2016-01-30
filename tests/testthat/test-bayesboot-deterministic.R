@@ -1,4 +1,5 @@
 context("Deterministic Bayesian bootstrap tests")
+library(doParallel)
 set.seed(123)
 
 test_that("rudirichlet produces a valid output", {
@@ -67,4 +68,18 @@ test_that("bayesboot produces a valid output", {
   expect_warning(plot(b5))
 })
 
+test_that("bayesboot can do paralell processing", {
+  library(doParallel)
+  library(foreach)
+  x <- rnorm(10)
+  registerDoParallel(cores = 4)
+  b6 <- bayesboot(x, mean, R = 1000, R2 = 1000, .parallel = TRUE)
+  expect_equal(class(b6), c("bayesboot", "data.frame"))
+  expect_equal(nrow(b6), 1000)
+  expect_equal(ncol(b6), 1)
+  stopImplicitCluster()
+  registerDoParallel(cores = 1)
+  stopImplicitCluster()
+
+})
 
