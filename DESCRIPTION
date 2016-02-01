@@ -13,5 +13,7 @@ LazyData: TRUE
 RoxygenNote: 5.0.1
 Imports: plyr (>= 1.8.3)
 Depends: R (>= 3.2.0)
-Suggests: testthat,
-    doParallel
+Suggests:
+  testthat,
+  doParallel
+
