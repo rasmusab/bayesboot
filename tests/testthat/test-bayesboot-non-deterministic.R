@@ -1,3 +1,5 @@
+skip_on_cran()
+Sys.setenv("R_TESTS" = "")
 # This file contains some tests that are non-deterministic and that might
 # occasionally fail, even if everything is OK. But they shouldn't fail too often...
 
@@ -17,7 +19,8 @@ test_that("The weight based and the resampling based bayesboot does the same thi
   expect_true(all(abs(q1 - q2) < 0.01))
 })
 
-test_that("bayesboot replicates the correlation anlalysis in Rubin", {
+test_that("bayesboot replicates the correlation anlalysis in Rubin (1981)", {
+  library(boot)
   target_q <- c("0.1" = 0.8962, "0.5" = 0.9519, "0.9" = 0.9788)
   b3 <- bayesboot(blood.flow, boot::corr, R = 10000, use.weights = TRUE)
   b4 <- bayesboot(blood.flow, function(x) { cor(x[,1], x[,2]) }, R = 10000, R2 = 1000)

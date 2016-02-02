@@ -34,6 +34,6 @@ rudirichlet(2, 3)
 # [2,] 0.07811 0.1390 0.7829
 
 # The above could be seen as a sample of two Bayesian bootstrap weights for a
-dataset of size three.
+# dataset of size three.
 }
 

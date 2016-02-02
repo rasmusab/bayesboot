@@ -25,7 +25,7 @@
 #' # [2,] 0.07811 0.1390 0.7829
 #'
 #' # The above could be seen as a sample of two Bayesian bootstrap weights for a
-#' dataset of size three.
+#' # dataset of size three.
 rudirichlet <- function(n, d) {
   # Using the facts that you can transform gamma distributed draws into
   # Dirichlet draws and that rgamma(n, 1) <==> rexp(n, 1)
@@ -104,8 +104,9 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' @param use.weights When \code{TRUE} the data will be reweighted, like in the
 #'   original Bayesian bootstrap. When \code{FALSE} (the default) the
 #'   reweighting will be approximated by resampling the data.
-#' @param .progress The type of progress bar. See the \code{.progress} argument
-#'   to \code{\link[plyr]{adply}} in the plyr package.
+#' @param .progress The type of progress bar ("none", "text", "tk", and "win").
+#'   See the \code{.progress} argument to \code{\link[plyr]{adply}} in the plyr
+#'   package.
 #' @param .parallel If \code{TRUE} enables parallel processing. See the
 #'   \code{.parallel} argument to \code{\link[plyr]{adply}} in the plyr package.
 #' @param ... Other arguments passed on to \code{statistic}
@@ -156,9 +157,10 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'   dye = c(1.15, 1.7, 1.42, 1.38, 2.80, 4.7, 4.8, 1.41, 3.9),
 #'   efp = c(1.38, 1.72, 1.59, 1.47, 1.66, 3.45, 3.87, 1.31, 3.75))
 #'
-#' # Using the weighted correlation from the boot package.
-#' b4 <- bayesboot(blood.flow, boot::corr, R = 1000, use.weights = TRUE)
-#' hist(b[,1])
+#' # Using the weighted correlation (corr) from the boot package.
+#' library(boot)
+#' b4 <- bayesboot(blood.flow, corr, R = 1000, use.weights = TRUE)
+#' hist(b4[,1])
 #'
 #'
 #' @references
@@ -268,7 +270,7 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
 #'
 #' @export
 summary.bayesboot <- function(object, cred.mass = 0.95, ...) {
-  bootsum <- ldply(seq_len(ncol(object)), function(i) {
+  bootsum <- plyr::ldply(seq_len(ncol(object)), function(i) {
     s <- object[,i]
     if(!is.numeric(s)) {
       warning(paste("The statistic", names(object)[i] , "was skipped as",
@@ -290,7 +292,7 @@ summary.bayesboot <- function(object, cred.mass = 0.95, ...) {
 #' @method print summary.bayesboot
 #' @export
 print.summary.bayesboot <- function(x, ...) {
-  stat.table <- ddply(x, "statistic", function(s) {
+  stat.table <- plyr::ddply(x, "statistic", function(s) {
     stats <- s$value
     names(stats) <- s$measure
     stats

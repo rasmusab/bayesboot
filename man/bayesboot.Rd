@@ -25,8 +25,9 @@ the data used to approximate the weighted statistic.}
 original Bayesian bootstrap. When \code{FALSE} (the default) the
 reweighting will be approximated by resampling the data.}
 
-\item{.progress}{The type of progress bar. See the \code{.progress} argument
-to \code{\link[plyr]{adply}} in the plyr package.}
+\item{.progress}{The type of progress bar ("none", "text", "tk", and "win").
+See the \code{.progress} argument to \code{\link[plyr]{adply}} in the plyr
+package.}
 
 \item{.parallel}{If \code{TRUE} enables parallel processing. See the
 \code{.parallel} argument to \code{\link[plyr]{adply}} in the plyr package.}
@@ -115,9 +116,10 @@ blood.flow <- data.frame(
   dye = c(1.15, 1.7, 1.42, 1.38, 2.80, 4.7, 4.8, 1.41, 3.9),
   efp = c(1.38, 1.72, 1.59, 1.47, 1.66, 3.45, 3.87, 1.31, 3.75))
 
-# Using the weighted correlation from the boot package.
-b4 <- bayesboot(blood.flow, boot::corr, R = 1000, use.weights = TRUE)
-hist(b[,1])
+# Using the weighted correlation (corr) from the boot package.
+library(boot)
+b4 <- bayesboot(blood.flow, corr, R = 1000, use.weights = TRUE)
+hist(b4[,1])
 
 
 }
