@@ -114,6 +114,7 @@
 #' @export
 hdi <- function(object, credMass=0.95, ...) UseMethod("hdi")
 
+#' @describeIn hdi Calculates the hdi given a numeric vector
 #' @export
 hdi.default <- function(object, credMass=0.95, ...) {
   if(!is.numeric(object))
@@ -136,6 +137,7 @@ hdi.default <- function(object, credMass=0.95, ...) {
   return(result)
 }
 
+#' @describeIn hdi Calculates the hdi of each column in a numeric matrix
 #' @export
 hdi.matrix <- function(object, credMass=0.95, ...) {
   result <- apply(object, 2, hdi.default, credMass=credMass, ...)
@@ -143,14 +145,17 @@ hdi.matrix <- function(object, credMass=0.95, ...) {
   return(result)
 }
 
+#' @describeIn hdi Calculates the hdi of each column in a data frame
 #' @export
 hdi.data.frame <- function(object, credMass=0.95, ...)
   hdi.matrix(as.matrix(object), credMass=credMass, ...)
 
+#' @describeIn hdi Calculates the hdi of each parameter in an mcmc.list object
 #' @export
 hdi.mcmc.list <- function(object, credMass=0.95, ...)
   hdi.matrix(as.matrix(object), credMass=credMass, ...)
 
+#' @describeIn hdi Calculates the hdi given a inverse cumulative density function
 #' @export
 hdi.function <- function(object, credMass=0.95, tol, ...)  {
   if(is.na(credMass) || length(credMass) != 1 || credMass <= 0 || credMass >= 1)
@@ -173,6 +178,7 @@ hdi.function <- function(object, credMass=0.95, tol, ...)  {
   return(result)
 }
 
+#' @describeIn hdi Calculates the hdi given the output from a call to \code{density()}
 #' @export
 hdi.density <- function(object, credMass=0.95, allowSplit=FALSE, ...) {
   if(is.na(credMass) || length(credMass) != 1 || credMass <= 0 || credMass >= 1)

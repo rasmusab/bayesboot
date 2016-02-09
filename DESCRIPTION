@@ -17,4 +17,5 @@ Suggests:
   testthat,
   doParallel,
   boot
+Encoding: UTF-8
 

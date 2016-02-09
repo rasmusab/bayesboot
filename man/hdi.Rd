@@ -11,6 +11,18 @@
 \title{Highest Density Interval}
 \usage{
 hdi(object, credMass = 0.95, ...)
+
+\method{hdi}{default}(object, credMass = 0.95, ...)
+
+\method{hdi}{matrix}(object, credMass = 0.95, ...)
+
+\method{hdi}{data.frame}(object, credMass = 0.95, ...)
+
+\method{hdi}{mcmc.list}(object, credMass = 0.95, ...)
+
+\method{hdi}{function}(object, credMass = 0.95, tol, ...)
+
+\method{hdi}{density}(object, credMass = 0.95, allowSplit = FALSE, ...)
 }
 \arguments{
 \item{object}{an object specifying the target distribution; see Details.}
@@ -84,6 +96,20 @@ function (ICDF) of the distribution; standard R functions for this have a
 \code{q-} prefix, eg. \code{qbeta}. Arguments required by the ICDF must be
 specified by their (abbreviated) names; see the examples.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{default}: Calculates the hdi given a numeric vector
+
+\item \code{matrix}: Calculates the hdi of each column in a numeric matrix
+
+\item \code{data.frame}: Calculates the hdi of each column in a data frame
+
+\item \code{mcmc.list}: Calculates the hdi of each parameter in an mcmc.list object
+
+\item \code{function}: Calculates the hdi given a inverse cumulative density function
+
+\item \code{density}: Calculates the hdi given the output from a call to \code{density()}
+}}
 \note{
 The origin of this function is
 \href{https://cran.r-project.org/web/packages/BEST/index.html}{the BEST package}.

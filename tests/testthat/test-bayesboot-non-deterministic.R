@@ -1,7 +1,6 @@
-skip_on_cran()
-Sys.setenv("R_TESTS" = "")
 # This file contains some tests that are non-deterministic and that might
 # occasionally fail, even if everything is OK. But they shouldn't fail too often...
+skip_on_cran() #As these tests might occasionally fail.
 
 context("Non-deterministic Bayesian bootstrap tests")
 
