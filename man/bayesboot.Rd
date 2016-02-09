@@ -127,7 +127,7 @@ hist(b4[,1])
 
 ### A Bayesian bootstrap analysis of lm coefficients ###
 
-# A custom function implementing returning the coefficients of
+# A custom function that returns the coefficients of
 # a weighted linear regression on the blood.flow data
 lm.coefs <- function(d, w) {
   coef( lm(efp ~ dye, data = d, weights = w) )
