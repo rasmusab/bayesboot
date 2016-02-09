@@ -140,13 +140,17 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'
 #' ### A Bayesian bootstrap analysis of a SD ###
 #'
-#' # A function calculating the population standard deviation.
+#' # When use.weights = FALSE it is important that the summary statistics
+#' # does not change as a function of sample size. This is the case with
+#' # the sample standard deviation, so here we have to implement a
+#' # function calculating the population standard deviation.
 #' pop.sd <- function(x) {
 #'   n <- length(x)
 #'   sd(x) * sqrt( (n - 1) / n)
 #' }
 #'
 #' b3 <- bayesboot(heights, pop.sd)
+#' summary(b3)
 #'
 #' ### A Bayesian bootstrap analysis of a correlation coefficient ###
 #'
@@ -361,7 +365,14 @@ plot.bayesboot <- function(x, cred.mass = 0.95, plots.per.page = 3, cex = 1.2, c
     if(n.plots > plots.per.page) {
       devAskNewPage(TRUE)
     }
-    plotPost(x[, i], credMass = cred.mass, xlab = names(x)[i], cex = cex, cex.lab = cex.lab, ...)
+    if(ncol(x) == 1 && names(x)[i] == "V1") {
+      # There is only one statistic and it has an uninformative default name
+      # so use the begining of the function call instead as a statistic.
+      statistic_name <- attr(x, "statistic.label")
+    } else { # use the column name
+      statistic_name <- names(x)[i]
+    }
+    plotPost(x[, i], credMass = cred.mass, xlab = statistic_name, cex = cex, cex.lab = cex.lab, ...)
   }
   par(old.par)
   devAskNewPage(old.devAskNewPage)
