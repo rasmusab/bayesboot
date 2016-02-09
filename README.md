@@ -1,7 +1,7 @@
 `bayesboot`: Easy Bayesian Bootstrap in R
 =========================================
 
-The `bayesboot` package implements a function `bayesboot` that performs the Bayesian bootstrap as introduced by Rubin (1981). The implementation can both handle statistics that works on a weighted version of the data or that works on a resampled data set.
+The `bayesboot` package implements a function `bayesboot` that performs the Bayesian bootstrap introduced by Rubin (1981). The implementation can both handle summary statistics that works on a weighted version of the data or that works on a resampled data set.
 
 `bayesboot` is not yet on CRAN but can be installed using [the devtools package](https://github.com/hadley/devtools):
 
@@ -33,12 +33,12 @@ summary(b1)
 ## Number of posterior draws: 4000 
 ## 
 ## Summary of the posterior (with 95% Highest Density Intervals):
-##  statistic  mean   sd hdi.low hdi.high
-##         V1 184.5 1.19   182.1    186.8
+##  statistic  mean    sd hdi.low hdi.high
+##         V1 184.5 1.154   182.3    186.9
 ## 
 ## Quantiles:
 ##  statistic q2.5%  q25% median  q75% q97.5%
-##         V1 182.1 183.7  184.5 185.3  186.9
+##         V1 182.3 183.7  184.5 185.2  186.9
 ## 
 ## Call:
 ##  bayesboot(data = heights, statistic = mean)
@@ -47,7 +47,7 @@ plot(b1)
 
 ![](README-unnamed-chunk-4-1.png)
 
-While it is possible to use a summary statistics that works on a resample of the original data, it is more efficient if it's possible to use a summary statistics that works on a *reweighting* of the original dataset. Instead of using `mean` above it would be better to use `weighted.mean` like this:
+While it is possible to use a summary statistic that works on a resample of the original data, it is more efficient if it's possible to use a summary statistic that works on a *reweighting* of the original dataset. Instead of using `mean` above it would be better to use `weighted.mean` like this:
 
 ``` r
 b2 <- bayesboot(heights, weighted.mean, use.weights = TRUE)
