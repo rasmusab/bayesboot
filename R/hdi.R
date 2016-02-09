@@ -47,8 +47,6 @@
 #' \code{q-} prefix, eg. \code{qbeta}. Arguments required by the ICDF must be
 #' specified by their (abbreviated) names; see the examples.
 #'
-#' @aliases hdi hdi.default hdi.function hdi.matrix hdi.data.frame hdi.density
-#' hdi.mcmc.list
 #' @param object an object specifying the target distribution; see Details.
 #' @param credMass a scalar [0, 1] specifying the mass within the credible
 #' interval.
@@ -57,6 +55,8 @@
 #' @param allowSplit if TRUE and the HDI is discontinuous, the beginning and
 #' end of each segment are returned; see Value.
 #' @param \dots named parameters to be passed to other methods; see Examples.
+#' @aliases hdi hdi.default hdi.function hdi.matrix hdi.data.frame hdi.density
+#'   hdi.mcmc.list
 #' @return a vector of length 2 or a 2-row matrix with the lower and upper
 #' limits of the HDI, with an attribute "credMass".
 #'
@@ -75,7 +75,6 @@
 #'
 #' Kruschke, J. K. (2013) Bayesian estimation supersedes the t test.
 #' \emph{Journal of Experimental Psychology: General}, \bold{142(2)}, 573.
-#' @keywords methods htest
 #' @examples
 #'
 #' # for a vector:

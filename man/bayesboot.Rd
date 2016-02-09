@@ -145,8 +145,10 @@ for(i in sample(nrow(b5), size = 20)) {
 }
 }
 \references{
-Miller, R. G. (1974) The jackknife - a review. \emph{Biometrika}, \bold{61(1)}, 1--15.
+Miller, R. G. (1974) The jackknife - a review. \emph{Biometrika},
+\bold{61(1)}, 1--15.
 
-Rubin, D. B. (1981). The Bayesian bootstrap. \emph{The annals of statistics}, \bold{9(1)}, 130--134.
+Rubin, D. B. (1981). The Bayesian bootstrap. \emph{The annals of statistics},
+\bold{9(1)}, 130--134.
 }
 

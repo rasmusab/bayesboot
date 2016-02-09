@@ -169,9 +169,11 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'   abline(coef = b5[i, ], col = "grey")
 #' }
 #' @references
-#' Miller, R. G. (1974) The jackknife - a review. \emph{Biometrika}, \bold{61(1)}, 1--15.
+#' Miller, R. G. (1974) The jackknife - a review. \emph{Biometrika},
+#' \bold{61(1)}, 1--15.
 #'
-#' Rubin, D. B. (1981). The Bayesian bootstrap. \emph{The annals of statistics}, \bold{9(1)}, 130--134.
+#' Rubin, D. B. (1981). The Bayesian bootstrap. \emph{The annals of statistics},
+#' \bold{9(1)}, 130--134.
 #' @export
 bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
                       .progress = "none", .parallel = FALSE, ...) {
@@ -196,7 +198,7 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
       stop("If use.weights == TRUE then statistic should take a weight vector as the second argument.")
     }
     w <- rep(1 / NROW(data), NROW(data))
-    tryCatch(stat.result <- statistic(data, w),
+    tryCatch(stat.result <- statistic(data, w, ...),
       error = function(e) {
         message("Applying the statistic on the original data and with uniform weights resulted in an error")
         stop(e)
@@ -206,7 +208,7 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
     if(length(R2) != 1 || is.na(R2) || !is.wholenumber(R2) || R2 < 1) {
       stop("If use.weights == FALSE then R2 should be a single whole number >= 1.")
     }
-    tryCatch(stat.result <- statistic(data),
+    tryCatch(stat.result <- statistic(data, ...),
       error = function(e) {
         message("Applying the statistic on the original data resulted in an error")
         stop(e)
@@ -230,7 +232,7 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
     boot.sample <- plyr::adply(
       dirichlet.weights, 1, .progress = .progress, .parallel = .parallel, .id = NULL,
       .fun = function(weights) {
-        statistic(data, weights)
+        statistic(data, weights, ...)
       }
     )
 
@@ -318,11 +320,11 @@ print.summary.bayesboot <- function(x, ...) {
   cat("Call:\n", format(attr(x, "call")))
 }
 
-#' Coerce to a bayesboot object
+#' Coerce to a \code{bayesboot} object
 #'
-#' This converts an object into a data frame and adds the class \code{bayesboot}.
-#' Doing this is only useful in the case you would want to use the \code{plot} and \code{summary} methods
-#' for \code{bayesboot} objects.
+#' This converts an object into a data frame and adds the class
+#' \code{bayesboot}. Doing this is only useful in the case you would want to use
+#' the \code{plot} and \code{summary} methods for \code{bayesboot} objects.
 #'
 #' @param object Any object that can be converted to a data frame.
 #'
@@ -342,12 +344,16 @@ as.bayesboot <- function(object) {
 
 #' Plot the result of \code{bayesboot}
 #'
-#' Produces histograms showing the marginal posterior distributions from a \code{bayesboot} call. Using the \code{\link{plotPost}} function to produce the individual histograms.
+#' Produces histograms showing the marginal posterior distributions from a
+#' \code{bayesboot} call. Uses the \code{\link{plotPost}} function to produce
+#' the individual histograms.
 #'
 #' @param x The bayesboot object to plot.
-#' @param cred.mass the probability mass to include in credible intervals, or NULL to suppress plotting of credible intervals.
+#' @param cred.mass the probability mass to include in credible intervals, or
+#'   NULL to suppress plotting of credible intervals.
 #' @param plots.per.page The maximum numbers of plots per page.
-#' @param cex,cex.lab,... Further parameters passed on to \code{\link{plotPost}}.
+#' @param cex,cex.lab,... Further parameters passed on to
+#'   \code{\link{plotPost}}.
 #'
 #' @export
 plot.bayesboot <- function(x, cred.mass = 0.95, plots.per.page = 3, cex = 1.2, cex.lab=1.3, ...) {

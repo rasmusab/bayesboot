@@ -162,6 +162,4 @@ Elsevier.
 Kruschke, J. K. (2013) Bayesian estimation supersedes the t test.
 \emph{Journal of Experimental Psychology: General}, \bold{142(2)}, 573.
 }
-\keyword{htest}
-\keyword{methods}
 

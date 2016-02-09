@@ -10,13 +10,17 @@
 \arguments{
 \item{x}{The bayesboot object to plot.}
 
-\item{cred.mass}{the probability mass to include in credible intervals, or NULL to suppress plotting of credible intervals.}
+\item{cred.mass}{the probability mass to include in credible intervals, or
+NULL to suppress plotting of credible intervals.}
 
 \item{plots.per.page}{The maximum numbers of plots per page.}
 
-\item{cex, cex.lab, ...}{Further parameters passed on to \code{\link{plotPost}}.}
+\item{cex, cex.lab, ...}{Further parameters passed on to
+\code{\link{plotPost}}.}
 }
 \description{
-Produces histograms showing the marginal posterior distributions from a \code{bayesboot} call. Using the \code{\link{plotPost}} function to produce the individual histograms.
+Produces histograms showing the marginal posterior distributions from a
+\code{bayesboot} call. Uses the \code{\link{plotPost}} function to produce
+the individual histograms.
 }
 

@@ -10,7 +10,12 @@
 #' The Highest Density Interval (HDI) is shown as a horizontal bar, with labels
 #' for the ends of the interval.
 #'
-#' \figure{plotPost1.jpg} \cr \cr \figure{plotPost2.jpg}
+#' \if{html}{\figure{plotPost1.jpg} }
+#' \if{latex}{\figure{plotPost1.jpg}{options: width=5cm}}
+#' \cr
+#' \cr
+#' \if{html}{\figure{plotPost2.jpg} }
+#' \if{latex}{\figure{plotPost2.jpg}{options: width=5cm}}
 #'
 #' If values for a ROPE are supplied, these are shown as dark red vertical
 #' dashed lines, together with the percentage of probability mass within the
