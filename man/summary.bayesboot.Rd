@@ -19,7 +19,7 @@ A data frame with three columns: (1) \bold{statistic} the name of the
   \bold{value} the value of the summarizing measure.
 }
 \description{
-Summarizes the result of a call to \code{bayesboot} by calulating means, SDs,
+Summarizes the result of a call to \code{bayesboot} by calculating means, SDs,
 highest density intervals and quantiles of the posterior marginals.
 }
 

@@ -41,30 +41,14 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
   abs(x - round(x)) < tol
 }
 
-# Performs a Bayesian bootstrap and returns a sample of size R representing the
-# posterior distribution of the statistic. Returns a vector if the statistic is
-# one-dimensional (like for mean(...)) or a data.frame if the statistic is
-# multi-dimensional (like for the coefs. of lm).
-# Parameters
-#   data      The data as either a vector, matrix or data.frame.
-#   statistic A function that accepts data as its first argument and possibly
-#             the weights as its second, if use_weights is TRUE.
-#             Should return a numeric vector.
-#   R        The size of the bootstrap sample.
-#   R2       The sample size used to calculate the statistic each bootstrap draw.
-#   use.weights  Whether the statistic function accepts a weight argument or
-#                should be calculated using resampled data.
-#   ...       Further arguments passed on to the statistic function.
-
-
 
 #' The Bayesian bootstrap
 #'
 #' Performs a Bayesian bootstrap and returns a \code{data.frame} with a sample
 #' of size \code{R} representing the posterior distribution of the (possibly
-#' multivariate) \code{statistic}.
+#' multivariate) summary \code{statistic}.
 #'
-#' The statistic is a function of the data that represents a feature of
+#' The summary statistic is a function of the data that represents a feature of
 #' interest, where a typical statistic is the mean. In \code{bayesboot} it is
 #' most efficient to define the statistic as a function taking the data as the
 #' first argument and a vector of weights as the second argument. An example of
@@ -76,14 +60,14 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' will, for each of the \code{R} Bayesian bootstrap draws, give a resampled
 #' version of the \code{data} of size \code{R2} to \code{statistic}. This will
 #' be much slower than using \code{use.weights = TRUE} but will work with a
-#' larger range of statistics (\code{\link{median}}, for example)
+#' larger range of statistics (the \code{\link{median}}, for example)
 #'
 #' @note \itemize{
 #' \item  While \code{R} and \code{R2} are set to \code{4000} by
 #' default, that should not be taken to indicate that a sample of size 4000 is
 #' sufficient nor recommended.
 #'
-#' \item When using \code{use.weights = FALSE} it is important to use a
+#' \item When using \code{use.weights = FALSE} it is important to use a summary
 #' statistic that does not depend on the sample size. That is, doubling the size
 #' of a dataset by cloning data should result in the same statistic as the
 #' original dataset. An example of a statistic that depends on the sample size
@@ -95,9 +79,9 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' @param data Either a vector or a list, or a matrix or a data.frame with one
 #'   datapoint per row. The format of \code{data} should be compatible with the
 #'   first argument of \code{statistic}
-#' @param statistic A function implementing the statistic of interest where the
-#'   first argument should take the data. If \code{use.weights = TRUE} then the
-#'   second argument should take a vector of weights.
+#' @param statistic A function implementing the summary statistic of interest
+#'   where the first argument should take the data. If \code{use.weights = TRUE}
+#'   then the second argument should take a vector of weights.
 #' @param R The size of the posterior sample from the Bayesian bootstrap.
 #' @param R2 When \code{use.weights = FALSE} this is the size of the resample of
 #'   the data used to approximate the weighted statistic.
@@ -166,11 +150,28 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' b4 <- bayesboot(blood.flow, corr, R = 1000, use.weights = TRUE)
 #' hist(b4[,1])
 #'
+#' ### A Bayesian bootstrap analysis of lm coefficients ###
 #'
+#' # A custom function that returns the coefficients of
+#' # a weighted linear regression on the blood.flow data
+#' lm.coefs <- function(d, w) {
+#'   coef( lm(efp ~ dye, data = d, weights = w) )
+#' }
+#'
+#' b5 <- bayesboot(blood.flow, lm.coefs, R = 2000, use.weights = TRUE)
+#'
+#' # Plotting the marginal posteriors
+#' plot(b5)
+#'
+#' # Plotting a scatter of regression lines from the posterior
+#' plot(blood.flow)
+#' for(i in sample(nrow(b5), size = 20)) {
+#'   abline(coef = b5[i, ], col = "grey")
+#' }
 #' @references
-#' Miller, R. G. (1974) The jackknife-a review. \emph{Biometrika}, \bold{61(1)}, 1--15.
+#' Miller, R. G. (1974) The jackknife - a review. \emph{Biometrika}, \bold{61(1)}, 1--15.
 #'
-#' Rubin, D. B. (1981). The bayesian bootstrap. \emph{The annals of statistics}, \bold{9(1)}, 130--134.
+#' Rubin, D. B. (1981). The Bayesian bootstrap. \emph{The annals of statistics}, \bold{9(1)}, 130--134.
 #' @export
 bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
                       .progress = "none", .parallel = FALSE, ...) {
@@ -261,7 +262,7 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
 
 #' Summarize the result of \code{bayesboot}
 #'
-#' Summarizes the result of a call to \code{bayesboot} by calulating means, SDs,
+#' Summarizes the result of a call to \code{bayesboot} by calculating means, SDs,
 #' highest density intervals and quantiles of the posterior marginals.
 #'
 #' @param object The bayesboot object to summarize.
@@ -320,7 +321,7 @@ print.summary.bayesboot <- function(x, ...) {
 #' Coerce to a bayesboot object
 #'
 #' This converts an object into a data frame and adds the class \code{bayesboot}.
-#' Doing this is only usful in the case you would want to use the plot and summary methods
+#' Doing this is only useful in the case you would want to use the \code{plot} and \code{summary} methods
 #' for \code{bayesboot} objects.
 #'
 #' @param object Any object that can be converted to a data frame.
@@ -345,7 +346,7 @@ as.bayesboot <- function(object) {
 #'
 #' @param x The bayesboot object to plot.
 #' @param cred.mass the probability mass to include in credible intervals, or NULL to suppress plotting of credible intervals.
-#' @param plots.per.page The maximum numers of plots per page.
+#' @param plots.per.page The maximum numbers of plots per page.
 #' @param cex,cex.lab,... Further parameters passed on to \code{\link{plotPost}}.
 #'
 #' @export

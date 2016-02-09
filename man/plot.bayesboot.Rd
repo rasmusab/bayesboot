@@ -12,7 +12,7 @@
 
 \item{cred.mass}{the probability mass to include in credible intervals, or NULL to suppress plotting of credible intervals.}
 
-\item{plots.per.page}{The maximum numers of plots per page.}
+\item{plots.per.page}{The maximum numbers of plots per page.}
 
 \item{cex, cex.lab, ...}{Further parameters passed on to \code{\link{plotPost}}.}
 }

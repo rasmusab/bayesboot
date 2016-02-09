@@ -14,7 +14,7 @@ A \code{data.frame} with subclass \code{bayesboot}.
 }
 \description{
 This converts an object into a data frame and adds the class \code{bayesboot}.
-Doing this is only usful in the case you would want to use the plot and summary methods
+Doing this is only useful in the case you would want to use the \code{plot} and \code{summary} methods
 for \code{bayesboot} objects.
 }
 

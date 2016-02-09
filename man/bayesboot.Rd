@@ -12,9 +12,9 @@ bayesboot(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
 datapoint per row. The format of \code{data} should be compatible with the
 first argument of \code{statistic}}
 
-\item{statistic}{A function implementing the statistic of interest where the
-first argument should take the data. If \code{use.weights = TRUE} then the
-second argument should take a vector of weights.}
+\item{statistic}{A function implementing the summary statistic of interest
+where the first argument should take the data. If \code{use.weights = TRUE}
+then the second argument should take a vector of weights.}
 
 \item{R}{The size of the posterior sample from the Bayesian bootstrap.}
 
@@ -47,10 +47,10 @@ A \code{data.frame} with \code{R} rows, each row being a draw from
 \description{
 Performs a Bayesian bootstrap and returns a \code{data.frame} with a sample
 of size \code{R} representing the posterior distribution of the (possibly
-multivariate) \code{statistic}.
+multivariate) summary \code{statistic}.
 }
 \details{
-The statistic is a function of the data that represents a feature of
+The summary statistic is a function of the data that represents a feature of
 interest, where a typical statistic is the mean. In \code{bayesboot} it is
 most efficient to define the statistic as a function taking the data as the
 first argument and a vector of weights as the second argument. An example of
@@ -62,7 +62,7 @@ It is also possible to define the statistic as a function only taking data
 will, for each of the \code{R} Bayesian bootstrap draws, give a resampled
 version of the \code{data} of size \code{R2} to \code{statistic}. This will
 be much slower than using \code{use.weights = TRUE} but will work with a
-larger range of statistics (\code{\link{median}}, for example)
+larger range of statistics (the \code{\link{median}}, for example)
 }
 \note{
 \itemize{
@@ -70,7 +70,7 @@ larger range of statistics (\code{\link{median}}, for example)
 default, that should not be taken to indicate that a sample of size 4000 is
 sufficient nor recommended.
 
-\item When using \code{use.weights = FALSE} it is important to use a
+\item When using \code{use.weights = FALSE} it is important to use a summary
 statistic that does not depend on the sample size. That is, doubling the size
 of a dataset by cloning data should result in the same statistic as the
 original dataset. An example of a statistic that depends on the sample size
@@ -99,13 +99,17 @@ mean( b2[,1] > 182)
 
 ### A Bayesian bootstrap analysis of a SD ###
 
-# A function calculating the population standard deviation.
+# When use.weights = FALSE it is important that the summary statistics
+# does not change as a function of sample size. This is the case with
+# the sample standard deviation, so here we have to implement a
+# function calculating the population standard deviation.
 pop.sd <- function(x) {
   n <- length(x)
   sd(x) * sqrt( (n - 1) / n)
 }
 
 b3 <- bayesboot(heights, pop.sd)
+summary(b3)
 
 ### A Bayesian bootstrap analysis of a correlation coefficient ###
 
@@ -121,11 +125,28 @@ library(boot)
 b4 <- bayesboot(blood.flow, corr, R = 1000, use.weights = TRUE)
 hist(b4[,1])
 
+### A Bayesian bootstrap analysis of lm coefficients ###
 
+# A custom function implementing returning the coefficients of
+# a weighted linear regression on the blood.flow data
+lm.coefs <- function(d, w) {
+  coef( lm(efp ~ dye, data = d, weights = w) )
+}
+
+b5 <- bayesboot(blood.flow, lm.coefs, R = 2000, use.weights = TRUE)
+
+# Plotting the marginal posteriors
+plot(b5)
+
+# Plotting a scatter of regression lines from the posterior
+plot(blood.flow)
+for(i in sample(nrow(b5), size = 20)) {
+  abline(coef = b5[i, ], col = "grey")
+}
 }
 \references{
-Miller, R. G. (1974) The jackknife-a review. \emph{Biometrika}, \bold{61(1)}, 1--15.
+Miller, R. G. (1974) The jackknife - a review. \emph{Biometrika}, \bold{61(1)}, 1--15.
 
-Rubin, D. B. (1981). The bayesian bootstrap. \emph{The annals of statistics}, \bold{9(1)}, 130--134.
+Rubin, D. B. (1981). The Bayesian bootstrap. \emph{The annals of statistics}, \bold{9(1)}, 130--134.
 }
 
