@@ -204,6 +204,10 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
         stop(e)
       }
     )
+    # TODO: Should I add some more checks to stat.result? Like, that it contains no NA, values?
+    # or should I maybe do these tests to the final posterior samples and issue a varning if
+    # there are NAs, NULLs and similar?
+
   } else { # use.weights == FALSE
     if(length(R2) != 1 || is.na(R2) || !is.wholenumber(R2) || R2 < 1) {
       stop("If use.weights == FALSE then R2 should be a single whole number >= 1.")
@@ -359,6 +363,10 @@ as.bayesboot <- function(object) {
 plot.bayesboot <- function(x, cred.mass = 0.95, plots.per.page = 3, cex = 1.2, cex.lab=1.3, ...) {
   old.devAskNewPage <- devAskNewPage()
   old.par <- par(mfrow = c(min(plots.per.page, ncol(x)) , 1) , mar = c(4.1, 4.1, 0.5, 4.1), mgp = c(2.5, 1, 0))
+  on.exit({ # revert graphical parameters
+    par(old.par)
+    devAskNewPage(old.devAskNewPage)
+  })
   n.plots <- 0
   for(i in seq_len(ncol(x))) {
     if(!is.numeric(x[, i])) {
@@ -381,8 +389,6 @@ plot.bayesboot <- function(x, cred.mass = 0.95, plots.per.page = 3, cex = 1.2, c
     }
     plotPost(x[, i], credMass = cred.mass, xlab = statistic_name, cex = cex, cex.lab = cex.lab, ...)
   }
-  par(old.par)
-  devAskNewPage(old.devAskNewPage)
   invisible(NULL)
 }
 
