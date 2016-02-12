@@ -18,7 +18,7 @@ Here is a Bayesian bootstrap analysis of the mean height of the last ten America
 
 ``` r
 # Heights of the last ten American presidents in cm (Kennedy to Obama).
-heights <- c(183, 192, 182, 183, 177, 185, 188, 188, 182, 185);
+heights <- c(183, 192, 182, 183, 177, 185, 188, 188, 182, 185)
 
 library(bayesboot)
 b1 <- bayesboot(heights, mean)
@@ -45,7 +45,7 @@ summary(b1)
 plot(b1)
 ```
 
-![](README-unnamed-chunk-4-1.png)
+![](README-president_summary-1.png)
 
 While it is possible to use a summary statistic that works on a resample of the original data, it is more efficient if it's possible to use a summary statistic that works on a *reweighting* of the original dataset. Instead of using `mean` above it would be better to use `weighted.mean` like this:
 
@@ -62,6 +62,29 @@ The result of a call to `bayesboot` will always result in a `data.frame` with on
 mean(c(b2[,1] > 175.9, TRUE, FALSE))
 ## [1] 0.9998
 ```
+
+### Comparing two groups
+
+If we want to compare the means of two groups, we will have to call `bayesboot` twice with each dataset and then use the resulting samples to calculate the posterior difference. For example, let's say we have the heights of the opponents that lost to the presidents in `height` the first time those presidents were elected. Now we are interested in comparing the mean height of American presidents with the mean height of presidential candidates that lost.
+
+``` r
+# The heights of oponents of American presidents (first time they were elected).
+# From Richard Nixon to John McCain
+heights_opponents <- c(182, 180, 180, 183, 177, 173, 188, 185, 175)
+
+# Running the Bayesian bootstrap for both datasets
+b_presidents <- bayesboot(heights, weighted.mean, use.weights = TRUE)
+b_opponents  <- bayesboot(heights_opponents, weighted.mean, use.weights = TRUE)
+
+# Calculating the posterior difference
+# (here converting back to a bayesboot object for pretty plotting)
+b_diff <- as.bayesboot(b_presidents - b_opponents)
+plot(b_diff)
+```
+
+![](README-height_comparison-1.png)
+
+So there is some evidence that loosing opponents could be shorter. (Though, I must add that it is quite unclear what the purpose really is with analyzing the heights of presidents and opponents...)
 
 A more advanced example
 -----------------------
@@ -92,7 +115,7 @@ lines(cars$speed, colMeans(bb_loess, na.rm = TRUE), type ="l",
       col = "tomato", lwd = 4)
 ```
 
-![](README-unnamed-chunk-8-1.png)
+![](README-car_plot-1.png)
 
 More information
 ----------------

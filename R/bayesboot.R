@@ -376,15 +376,14 @@ plot.bayesboot <- function(x, cred.mass = 0.95, plots.per.page = 3, cex = 1.2, c
                     "plot.bayesboot can't handle non-numeric statistics."))
       next
     }
-    # Byta ut detta mot plotPost?
-    #hist(x[, i], breaks = "FD", xlab = names(x)[i])
     n.plots <- n.plots + 1
     if(n.plots > plots.per.page) {
       devAskNewPage(TRUE)
     }
-    if(ncol(x) == 1 && names(x)[i] == "V1") {
+    if(ncol(x) == 1 && names(x)[i] == "V1" && attr(x, "statistic.label") != "") {
       # There is only one statistic and it has an uninformative default name
-      # so use the begining of the function call instead as a statistic.
+      # so use the begining of the function call instead as a statistic, unless
+      # it is empty.
       statistic_name <- attr(x, "statistic.label")
     } else { # use the column name
       statistic_name <- names(x)[i]
