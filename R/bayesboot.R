@@ -300,6 +300,8 @@ summary.bayesboot <- function(object, cred.mass = 0.95, ...) {
   bootsum
 }
 
+#TODO: Special print function for bayesboot objects?
+
 #' @method print summary.bayesboot
 #' @export
 print.summary.bayesboot <- function(x, ...) {
