@@ -262,8 +262,16 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
   class(boot.sample) <- c("bayesboot", class(boot.sample))
   attr(boot.sample, "statistic.label") <- statistic.label
   attr(boot.sample, "call") <- call
+  # Warn if boot.sample contains "non-values".
+  col.should.warn <- laply(boot.sample, function(boot.col) {
+    any(is.na(boot.col) |is.nan(boot.col) | is.null(boot.col))
+  })
+  if(any(col.should.warn)) {
+    warning("The sample from bayesboot contains either NAs, NaNs or NULLs")
+  }
   boot.sample
 }
+
 
 
 #' Summarize the result of \code{bayesboot}

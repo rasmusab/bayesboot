@@ -53,7 +53,13 @@ test_that("bayesboot produces a valid output", {
   expect_equal(nrow(b5), 50)
   expect_equal(ncol(b5), 1)
 
-
+  # Another strange bootstrap with a statistic that outputs NAs
+  d <- data.frame(x = 1:15, y = c(1, 2, 3, 4, NA))
+  expect_warning({
+    b6 <- bayesboot(d, use.weights = TRUE, R = 100, function(d, w) {
+      c(weighted.mean(d$x, w), weighted.mean(d$y, w))
+    })
+  })
 
   expect_output(summary(b1), ".")
   expect_output(summary(b2), ".")
@@ -75,10 +81,10 @@ test_that("bayesboot can do paralell processing", {
   library(foreach)
   x <- rnorm(10)
   registerDoParallel(cores = 2)
-  b6 <- bayesboot(x, mean, R = 1000, R2 = 1000, .parallel = TRUE)
-  expect_equal(class(b6), c("bayesboot", "data.frame"))
-  expect_equal(nrow(b6), 1000)
-  expect_equal(ncol(b6), 1)
+  b1 <- bayesboot(x, mean, R = 1000, R2 = 1000, .parallel = TRUE)
+  expect_equal(class(b1), c("bayesboot", "data.frame"))
+  expect_equal(nrow(b1), 1000)
+  expect_equal(ncol(b1), 1)
   stopImplicitCluster()
   registerDoParallel(cores = 1)
   stopImplicitCluster()
