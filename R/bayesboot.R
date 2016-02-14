@@ -263,7 +263,7 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
   attr(boot.sample, "statistic.label") <- statistic.label
   attr(boot.sample, "call") <- call
   # Warn if boot.sample contains "non-values".
-  col.should.warn <- laply(boot.sample, function(boot.col) {
+  col.should.warn <- plyr::laply(boot.sample, function(boot.col) {
     any(is.na(boot.col) |is.nan(boot.col) | is.null(boot.col))
   })
   if(any(col.should.warn)) {
@@ -310,7 +310,21 @@ summary.bayesboot <- function(object, cred.mass = 0.95, ...) {
   bootsum
 }
 
-#TODO: Special print function for bayesboot objects?
+#' Print the first number of draws from the Bayesian bootstrap
+#'
+#' @param x The bayesboot object to print.
+#' @param n The number of draws to print.
+#' @param ... Not used.
+#' @export
+print.bayesboot <- function(x, n = 10, ...) {
+  cat(paste0("The first ", n," draws (out of ", nrow(x) ,") from the Bayesian bootstrap:\n"))
+  cat("\n")
+  print(as.data.frame(head(x, n)))
+  cat(".. ...\n")
+  cat("\n")
+  cat("Use summary() to produce a summary of the posterior distribution.\n")
+  invisible(x)
+}
 
 #' @method print summary.bayesboot
 #' @export
@@ -334,6 +348,7 @@ print.summary.bayesboot <- function(x, ...) {
     cat("\n")
   }
   cat("Call:\n", format(attr(x, "call")))
+  invisible(x)
 }
 
 #' Coerce to a \code{bayesboot} object

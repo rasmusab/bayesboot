@@ -1,6 +1,7 @@
 bayesboot 0.2
 =======================
 
+* Added print.bayesboot method.
 * bayesboot now warns when the posterior sample contains NAs, NaNs and NULLs.
 * plot.bayesboot now correctly resets graph parameters.
 
