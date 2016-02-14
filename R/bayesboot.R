@@ -267,7 +267,9 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
     any(is.na(boot.col) |is.nan(boot.col) | is.null(boot.col))
   })
   if(any(col.should.warn)) {
-    warning("The sample from bayesboot contains either NAs, NaNs or NULLs")
+    warning(paste(
+      "The sample from bayesboot contains either NAs, NaNs or NULLs.",
+      "Make sure that your statistic function only return actual values."))
   }
   boot.sample
 }
