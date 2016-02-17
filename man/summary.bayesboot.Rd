@@ -22,4 +22,8 @@ A data frame with three columns: (1) \bold{statistic} the name of the
 Summarizes the result of a call to \code{bayesboot} by calculating means, SDs,
 highest density intervals and quantiles of the posterior marginals.
 }
+\seealso{
+\code{\link[HDInterval]{hdi}} in the HDInterval package for directly calculating
+  highest density intervals from \code{bayesboot} objects.
+}
 

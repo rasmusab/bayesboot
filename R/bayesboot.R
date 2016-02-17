@@ -296,6 +296,9 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
 #'   statistic, (2) \bold{measure} the name of the summarizing measure, and (3)
 #'   \bold{value} the value of the summarizing measure.
 #'
+#' @seealso \code{\link[HDInterval]{hdi}} in the HDInterval package for directly calculating
+#'   highest density intervals from \code{bayesboot} objects.
+#'
 #' @export
 summary.bayesboot <- function(object, cred.mass = 0.95, ...) {
   bootsum <- plyr::ldply(seq_len(ncol(object)), function(i) {
