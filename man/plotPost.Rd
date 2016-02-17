@@ -60,7 +60,7 @@ above this value.
 }
 \note{
 The origin of this function is
-  \href{https://cran.r-project.org/web/packages/BEST/index.html}{the BEST
+  \href{http://cran.r-project.org/package=BEST}{the BEST
   package} which is based on Kruschke(2015, 2013).
 }
 \examples{

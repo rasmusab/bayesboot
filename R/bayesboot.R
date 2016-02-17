@@ -1,3 +1,10 @@
+# Importing some of the base packages which are used in the functions below.
+#' @import stats
+#' @import grDevices
+#' @import graphics
+#' @import utils
+NULL
+
 #' Produce random draws from a uniform Dirichlet distribution
 #'
 #' \code{rudirichlet} produces \code{n} draws from a \code{d}-dimensional
@@ -300,7 +307,7 @@ summary.bayesboot <- function(object, cred.mass = 0.95, ...) {
     }
     data.frame(statistic   = names(object)[i],
                measure   = c("mean", "sd", "hdi.low", "hdi.high","q2.5%", "q25%", "median" ,"q75%", "q97.5%"),
-               value   = c(mean(s), sd(s), hdi(s, cred.mass), quantile(s, c(0.025, 0.25, 0.5, 0.75, 0.975))))
+               value   = c(mean(s), sd(s), HDInterval::hdi(s, cred.mass), quantile(s, c(0.025, 0.25, 0.5, 0.75, 0.975))))
   })
   attr(bootsum, "statistic.label") <- attr(object, "statistic.label")
   attr(bootsum, "call") <- attr(object, "call")
