@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Added DOIs to the DESCRIPTION as requested. (Sorry for this omission!)
+
 ## Test environments
 * local Ubuntu 32-bit 12.04 , R 3.2.3
 * win-builder (devel and release)
