@@ -1,4 +1,4 @@
-bayesboot 0.2
+bayesboot 0.2.0
 =======================
 
 * Added print.bayesboot method.
@@ -7,7 +7,7 @@ bayesboot 0.2
 * Removed bayesboot::hdi and instead depend on HDInterval::hdi .
 
 
-bayesboot 0.1
+bayesboot 0.1.0
 =======================
 
 * Initial release.
