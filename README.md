@@ -3,12 +3,10 @@
 
 The `bayesboot` package implements a function `bayesboot` that performs the Bayesian bootstrap introduced by Rubin (1981). The implementation can both handle summary statistics that works on a weighted version of the data or that works on a resampled data set.
 
-`bayesboot` is not yet on CRAN but can be installed using [the devtools package](https://github.com/hadley/devtools):
+`bayesboot` is available on CRAN and can be installed in the usual way:
 
 ``` r
-# If you don't have devtools run this first: 
-# install.packages("devtools")
-devtools::install_github("rasmusab/bayesboot")
+install.packages("bayesboot")
 ```
 
 A simple example
