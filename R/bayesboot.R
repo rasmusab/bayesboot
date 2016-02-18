@@ -69,6 +69,16 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' be much slower than using \code{use.weights = TRUE} but will work with a
 #' larger range of statistics (the \code{\link{median}}, for example)
 #'
+#' For more information regarding this implementation of the Bayesian bootstrap
+#' see the blog post
+#' \href{http://www.sumsar.net/blog/2015/07/easy-bayesian-bootstrap-in-r/}{Easy
+#' Bayesian Bootstrap in R}. For more information about the model behind the
+#' Bayesian bootstrap see the blog post
+#' \href{http://www.sumsar.net/blog/2015/04/the-non-parametric-bootstrap-as-a-bayesian-model/}{The
+#' Non-parametric Bootstrap as a Bayesian Model} and, of course,
+#' \href{http://projecteuclid.org/euclid.aos/1176345338}{the original Bayesian
+#' bootstrap paper by Rubin (1981)}.
+#'
 #' @note \itemize{
 #' \item  While \code{R} and \code{R2} are set to \code{4000} by
 #' default, that should not be taken to indicate that a sample of size 4000 is
@@ -76,12 +86,11 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'
 #' \item When using \code{use.weights = FALSE} it is important to use a summary
 #' statistic that does not depend on the sample size. That is, doubling the size
-#' of a dataset by cloning data should result in the same statistic as the
-#' original dataset. An example of a statistic that depends on the sample size
-#' is the sample standard deviation (that is, \code{\link{sd}}), and when using
-#' \code{bayesboot} it would make more sense to use the population standard
-#' deviation (see examples below).
-#' }
+#' of a dataset by cloning data should result in the same statistic as when
+#' using the original dataset. An example of a statistic that depends on the
+#' sample size is the sample standard deviation (that is, \code{\link{sd}}), and
+#' when using \code{bayesboot} it would make more sense to use the population
+#' standard deviation (as in the example below). }
 #'
 #' @param data Either a vector or a list, or a matrix or a data.frame with one
 #'   datapoint per row. The format of \code{data} should be compatible with the
@@ -165,7 +174,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'   coef( lm(efp ~ dye, data = d, weights = w) )
 #' }
 #'
-#' b5 <- bayesboot(blood.flow, lm.coefs, R = 2000, use.weights = TRUE)
+#' b5 <- bayesboot(blood.flow, lm.coefs, R = 1000, use.weights = TRUE)
 #'
 #' # Plotting the marginal posteriors
 #' plot(b5)
