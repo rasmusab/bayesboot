@@ -1,4 +1,13 @@
-bayesboot 0.1
+bayesboot 0.2.0
+=======================
+
+* Added print.bayesboot method.
+* bayesboot now warns when the posterior sample contains NAs, NaNs and NULLs.
+* plot.bayesboot now correctly resets graph parameters.
+* Removed bayesboot::hdi and instead depend on HDInterval::hdi .
+
+
+bayesboot 0.1.0
 =======================
 
 * Initial release.

@@ -3,3 +3,6 @@
 ^README\.Rmd$
 ^README-.*\.png$
 ^testingground$
+^blogposts$
+Rplots.pdf
+cran-comments.md

@@ -1,3 +1,10 @@
+# Importing some of the base packages which are used in the functions below.
+#' @import stats
+#' @import grDevices
+#' @import graphics
+#' @import utils
+NULL
+
 #' Produce random draws from a uniform Dirichlet distribution
 #'
 #' \code{rudirichlet} produces \code{n} draws from a \code{d}-dimensional
@@ -62,6 +69,16 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' be much slower than using \code{use.weights = TRUE} but will work with a
 #' larger range of statistics (the \code{\link{median}}, for example)
 #'
+#' For more information regarding this implementation of the Bayesian bootstrap
+#' see the blog post
+#' \href{http://www.sumsar.net/blog/2015/07/easy-bayesian-bootstrap-in-r/}{Easy
+#' Bayesian Bootstrap in R}. For more information about the model behind the
+#' Bayesian bootstrap see the blog post
+#' \href{http://www.sumsar.net/blog/2015/04/the-non-parametric-bootstrap-as-a-bayesian-model/}{The
+#' Non-parametric Bootstrap as a Bayesian Model} and, of course,
+#' \href{http://projecteuclid.org/euclid.aos/1176345338}{the original Bayesian
+#' bootstrap paper by Rubin (1981)}.
+#'
 #' @note \itemize{
 #' \item  While \code{R} and \code{R2} are set to \code{4000} by
 #' default, that should not be taken to indicate that a sample of size 4000 is
@@ -69,12 +86,11 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'
 #' \item When using \code{use.weights = FALSE} it is important to use a summary
 #' statistic that does not depend on the sample size. That is, doubling the size
-#' of a dataset by cloning data should result in the same statistic as the
-#' original dataset. An example of a statistic that depends on the sample size
-#' is the sample standard deviation (that is, \code{\link{sd}}), and when using
-#' \code{bayesboot} it would make more sense to use the population standard
-#' deviation (see examples below).
-#' }
+#' of a dataset by cloning data should result in the same statistic as when
+#' using the original dataset. An example of a statistic that depends on the
+#' sample size is the sample standard deviation (that is, \code{\link{sd}}), and
+#' when using \code{bayesboot} it would make more sense to use the population
+#' standard deviation (as in the example below). }
 #'
 #' @param data Either a vector or a list, or a matrix or a data.frame with one
 #'   datapoint per row. The format of \code{data} should be compatible with the
@@ -158,7 +174,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'   coef( lm(efp ~ dye, data = d, weights = w) )
 #' }
 #'
-#' b5 <- bayesboot(blood.flow, lm.coefs, R = 2000, use.weights = TRUE)
+#' b5 <- bayesboot(blood.flow, lm.coefs, R = 1000, use.weights = TRUE)
 #'
 #' # Plotting the marginal posteriors
 #' plot(b5)
@@ -204,6 +220,10 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
         stop(e)
       }
     )
+    # TODO: Should I add some more checks to stat.result? Like, that it contains no NA, values?
+    # or should I maybe do these tests to the final posterior samples and issue a varning if
+    # there are NAs, NULLs and similar?
+
   } else { # use.weights == FALSE
     if(length(R2) != 1 || is.na(R2) || !is.wholenumber(R2) || R2 < 1) {
       stop("If use.weights == FALSE then R2 should be a single whole number >= 1.")
@@ -258,8 +278,18 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
   class(boot.sample) <- c("bayesboot", class(boot.sample))
   attr(boot.sample, "statistic.label") <- statistic.label
   attr(boot.sample, "call") <- call
+  # Warn if boot.sample contains "non-values".
+  col.should.warn <- plyr::laply(boot.sample, function(boot.col) {
+    any(is.na(boot.col) |is.nan(boot.col) | is.null(boot.col))
+  })
+  if(any(col.should.warn)) {
+    warning(paste(
+      "The sample from bayesboot contains either NAs, NaNs or NULLs.",
+      "Make sure that your statistic function only return actual values."))
+  }
   boot.sample
 }
+
 
 
 #' Summarize the result of \code{bayesboot}
@@ -275,6 +305,9 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
 #'   statistic, (2) \bold{measure} the name of the summarizing measure, and (3)
 #'   \bold{value} the value of the summarizing measure.
 #'
+#' @seealso \code{\link[HDInterval]{hdi}} in the HDInterval package for directly calculating
+#'   highest density intervals from \code{bayesboot} objects.
+#'
 #' @export
 summary.bayesboot <- function(object, cred.mass = 0.95, ...) {
   bootsum <- plyr::ldply(seq_len(ncol(object)), function(i) {
@@ -286,7 +319,7 @@ summary.bayesboot <- function(object, cred.mass = 0.95, ...) {
     }
     data.frame(statistic   = names(object)[i],
                measure   = c("mean", "sd", "hdi.low", "hdi.high","q2.5%", "q25%", "median" ,"q75%", "q97.5%"),
-               value   = c(mean(s), sd(s), hdi(s, cred.mass), quantile(s, c(0.025, 0.25, 0.5, 0.75, 0.975))))
+               value   = c(mean(s), sd(s), HDInterval::hdi(s, cred.mass), quantile(s, c(0.025, 0.25, 0.5, 0.75, 0.975))))
   })
   attr(bootsum, "statistic.label") <- attr(object, "statistic.label")
   attr(bootsum, "call") <- attr(object, "call")
@@ -294,6 +327,22 @@ summary.bayesboot <- function(object, cred.mass = 0.95, ...) {
   attr(bootsum, "cred.mass") <- cred.mass
   class(bootsum) <- c("summary.bayesboot", class(bootsum))
   bootsum
+}
+
+#' Print the first number of draws from the Bayesian bootstrap
+#'
+#' @param x The bayesboot object to print.
+#' @param n The number of draws to print.
+#' @param ... Not used.
+#' @export
+print.bayesboot <- function(x, n = 10, ...) {
+  cat(paste0("The first ", n," draws (out of ", nrow(x) ,") from the Bayesian bootstrap:\n"))
+  cat("\n")
+  print(as.data.frame(head(x, n)))
+  cat(".. ...\n")
+  cat("\n")
+  cat("Use summary() to produce a summary of the posterior distribution.\n")
+  invisible(x)
 }
 
 #' @method print summary.bayesboot
@@ -318,6 +367,7 @@ print.summary.bayesboot <- function(x, ...) {
     cat("\n")
   }
   cat("Call:\n", format(attr(x, "call")))
+  invisible(x)
 }
 
 #' Coerce to a \code{bayesboot} object
@@ -359,6 +409,10 @@ as.bayesboot <- function(object) {
 plot.bayesboot <- function(x, cred.mass = 0.95, plots.per.page = 3, cex = 1.2, cex.lab=1.3, ...) {
   old.devAskNewPage <- devAskNewPage()
   old.par <- par(mfrow = c(min(plots.per.page, ncol(x)) , 1) , mar = c(4.1, 4.1, 0.5, 4.1), mgp = c(2.5, 1, 0))
+  on.exit({ # revert graphical parameters
+    par(old.par)
+    devAskNewPage(old.devAskNewPage)
+  })
   n.plots <- 0
   for(i in seq_len(ncol(x))) {
     if(!is.numeric(x[, i])) {
@@ -366,23 +420,20 @@ plot.bayesboot <- function(x, cred.mass = 0.95, plots.per.page = 3, cex = 1.2, c
                     "plot.bayesboot can't handle non-numeric statistics."))
       next
     }
-    # Byta ut detta mot plotPost?
-    #hist(x[, i], breaks = "FD", xlab = names(x)[i])
     n.plots <- n.plots + 1
     if(n.plots > plots.per.page) {
       devAskNewPage(TRUE)
     }
-    if(ncol(x) == 1 && names(x)[i] == "V1") {
+    if(ncol(x) == 1 && names(x)[i] == "V1" && attr(x, "statistic.label") != "") {
       # There is only one statistic and it has an uninformative default name
-      # so use the begining of the function call instead as a statistic.
+      # so use the begining of the function call instead as a statistic, unless
+      # it is empty.
       statistic_name <- attr(x, "statistic.label")
     } else { # use the column name
       statistic_name <- names(x)[i]
     }
     plotPost(x[, i], credMass = cred.mass, xlab = statistic_name, cex = cex, cex.lab = cex.lab, ...)
   }
-  par(old.par)
-  devAskNewPage(old.devAskNewPage)
   invisible(NULL)
 }
 

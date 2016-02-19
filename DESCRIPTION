@@ -1,17 +1,21 @@
 Package: bayesboot
 Type: Package
 Title: An Implementation of Rubin's (1981) Bayesian Bootstrap
-Version: 0.1
-Date: 2016-02-09
+Version: 0.2.0
+Date: 2016-02-18
 Authors@R: person("Rasmus", "Bååth", email = "rasmus.baath@gmail.com", role = c("aut", "cre"))
 Description: Functions for performing the Bayesian bootstrap as introduced by
-    Rubin (1981) and for summarizing the result. The implementation can both handle
-    summary statistics that works on a weighted version of the data or that works
-    on a resampled data set.
+    Rubin (1981) <doi:10.1214/aos/1176345338> and for summarizing the result.
+    The implementation can handle both summary statistics that works on a
+    weighted version of the data and summary statistics that works on a
+    resampled data set.
 License: MIT + file LICENSE
 LazyData: TRUE
+URL: https://github.com/rasmusab/bayesboot
+BugReports: https://github.com/rasmusab/bayesboot/issues
 RoxygenNote: 5.0.1
-Imports: plyr (>= 1.8.3)
+Imports: plyr (>= 1.8.3),
+  HDInterval(>= 0.1.1)
 Depends: R (>= 3.2.0)
 Suggests:
   testthat,

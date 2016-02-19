@@ -40,7 +40,7 @@
 #'   plotting side-effect.
 #'
 #' @note The origin of this function is
-#'   \href{https://cran.r-project.org/web/packages/BEST/index.html}{the BEST
+#'   \href{http://cran.r-project.org/package=BEST}{the BEST
 #'   package} which is based on Kruschke(2015, 2013).
 #'
 #' @author John Kruschke, modified by Mike Meredith
@@ -87,7 +87,7 @@ plotPost <-
   defaultArgs <- list(xlab=deparse(substitute(paramSampleVec)),
     yaxt="n", ylab="", main="", cex.lab=1.5,
     cex=1.4, col="skyblue", border="white", bty="n", lwd=5, freq=FALSE,
-    xlim=range(compVal, hdi(paramSampleVec, 0.99)))
+    xlim=range(compVal, HDInterval::hdi(paramSampleVec, 0.99)))
   useArgs <- modifyList(defaultArgs, dots)
 
   # Get breaks argument
@@ -96,7 +96,7 @@ plotPost <-
     if (all(paramSampleVec == round(paramSampleVec))) { # all integers
       breaks <- seq(min(paramSampleVec), max(paramSampleVec) + 1) - 0.5
     } else {
-      by <- diff(hdi(paramSampleVec))/18
+      by <- diff(HDInterval::hdi(paramSampleVec))/18
       breaks <- unique(c( seq( from=min(paramSampleVec), to=max(paramSampleVec),
                      by=by), max(paramSampleVec) ))
     }
@@ -119,7 +119,7 @@ plotPost <-
     abline(h=0, col='grey', xpd=FALSE)
     # Display the HDI.
     if(!is.null(credMass)) {
-      HDI <- hdi(densCurve, credMass, allowSplit=TRUE)
+      HDI <- HDInterval::hdi(densCurve, credMass, allowSplit=TRUE)
       ht <- attr(HDI, "height")
       segments(HDI[, 1], ht, HDI[, 2], ht, lwd=4, lend='butt')
       segments(HDI, 0, HDI, ht, lty=2)
@@ -140,7 +140,7 @@ plotPost <-
     do.call(plot, plotArgs, quote=TRUE)
     # Display the HDI.
     if(!is.null(credMass)) {
-      HDI <- hdi( paramSampleVec, credMass )
+      HDI <- HDInterval::hdi( paramSampleVec, credMass )
       lines(HDI, c(0,0), lwd=4, lend='butt')
       text( mean(HDI), 0, bquote(.(100*credMass) * "% HDI" ),
             adj=c(.5,-1.7), cex=useArgs$cex )
