@@ -43,7 +43,7 @@ summary(b1)
 plot(b1)
 ```
 
-![](README-president_summary-1.png)
+![](README-files/README-president_summary-1.png)
 
 While it is possible to use a summary statistic that works on a resample of the original data, it is more efficient if it's possible to use a summary statistic that works on a *reweighting* of the original dataset. Instead of using `mean` above it would be better to use `weighted.mean` like this:
 
@@ -80,7 +80,7 @@ b_diff <- as.bayesboot(b_presidents - b_opponents)
 plot(b_diff)
 ```
 
-![](README-height_comparison-1.png)
+![](README-files/README-height_comparison-1.png)
 
 So there is some evidence that loosing opponents could be shorter. (Though, I must add that it is quite unclear what the purpose really is with analyzing the heights of presidents and opponents...)
 
@@ -113,7 +113,7 @@ lines(cars$speed, colMeans(bb_loess, na.rm = TRUE), type ="l",
       col = "tomato", lwd = 4)
 ```
 
-![](README-car_plot-1.png)
+![](README-files/README-car_plot-1.png)
 
 More information
 ----------------
