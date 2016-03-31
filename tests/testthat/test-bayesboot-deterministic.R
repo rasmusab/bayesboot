@@ -61,10 +61,10 @@ test_that("bayesboot produces a valid output", {
     })
   })
 
-  expect_output(summary(b1), ".")
-  expect_output(summary(b2), ".")
-  expect_output(summary(b3), ".")
-  expect_output(summary(b4), ".")
+  expect_output(print(summary(b1)), ".")
+  expect_output(print(summary(b2)), ".")
+  expect_output(print(summary(b3)), ".")
+  expect_output(print(summary(b4)), ".")
   expect_warning(summary(b5))
   expect_true({
     plot(b1)
