@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Fixed an invalid URL in README.md by removing parentheses that had been added by mistake.
+
 ## Test environments
 * local Ubuntu 32-bit 12.04 , R 3.2.4
 * win-builder (devel and release)
