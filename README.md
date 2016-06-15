@@ -43,7 +43,7 @@ summary(b1)
 plot(b1)
 ```
 
-![](README-files/README-president_summary-1.png)<!-- -->
+![](README-files/README-president_summary-1.png)
 
 While it is possible to use a summary statistic that works on a resample of the original data, it is more efficient if it's possible to use a summary statistic that works on a *reweighting* of the original dataset. Instead of using `mean` above it would be better to use `weighted.mean` like this:
 
