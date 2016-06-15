@@ -80,7 +80,7 @@ b_diff <- as.bayesboot(b_presidents - b_opponents)
 plot(b_diff)
 ```
 
-![](README-files/README-height_comparison-1.png)<!-- -->
+![](README-files/README-height_comparison-1.png)
 
 So there is some evidence that loosing opponents could be shorter. (Though, I must add that it is quite unclear what the purpose really is with analyzing the heights of presidents and opponents...)
 
