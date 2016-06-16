@@ -367,6 +367,7 @@ print.summary.bayesboot <- function(x, ...) {
     cat("\n")
   }
   cat("Call:\n", format(attr(x, "call")))
+  cat("\n")
   invisible(x)
 }
 
