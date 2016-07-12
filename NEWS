@@ -1,3 +1,9 @@
+bayesboot 0.2.1.9000
+=======================
+
+* In previous versions bayesboot allocated an R by NROW(data) matrix, which could become huge. Now bayesboot instead splits up the sampling
+into a number of batches in order to only have to allocate a smaller matrix.
+
 bayesboot 0.2.1
 =======================
 

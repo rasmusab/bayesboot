@@ -18,6 +18,7 @@ test_that("bayesboot produces a valid output", {
   expect_equal(nrow(b1), 100)
   expect_equal(ncol(b1), 1)
 
+
   b2 <- bayesboot(x, weighted.mean, R = 50, R2 = NULL, use.weights = TRUE)
   expect_equal(class(b2), c("bayesboot", "data.frame"))
   expect_equal(nrow(b2), 50)
@@ -61,6 +62,18 @@ test_that("bayesboot produces a valid output", {
     })
   })
 
+  x <- rnorm(100000)
+  b7 <- bayesboot(x, mean, R = 1000, R2 = 1000, use.weights = FALSE, .progress = "text")
+  expect_equal(class(b7), c("bayesboot", "data.frame"))
+  expect_equal(nrow(b7), 1000)
+  expect_equal(ncol(b7), 1)
+
+  x <- rnorm(1)
+  b8 <- bayesboot(x, mean, R = 1000, R2 = 1000, use.weights = TRUE, .progress = "text")
+  expect_equal(class(b8), c("bayesboot", "data.frame"))
+  expect_equal(nrow(b8), 1000)
+  expect_equal(ncol(b8), 1)
+
   expect_output(print(summary(b1)), ".")
   expect_output(print(summary(b2)), ".")
   expect_output(print(summary(b3)), ".")
@@ -74,14 +87,16 @@ test_that("bayesboot produces a valid output", {
     TRUE
   })
   expect_warning(plot(b5))
+
+
 })
 
 test_that("bayesboot can do paralell processing", {
   library(doParallel)
   library(foreach)
-  x <- rnorm(10)
+  x <- rnorm(100000)
   registerDoParallel(cores = 2)
-  b1 <- bayesboot(x, mean, R = 1000, R2 = 1000, .parallel = TRUE)
+  b1 <- bayesboot(x, mean, R = 1000, R2 = 1000, .parallel = TRUE, .progress = "text")
   expect_equal(class(b1), c("bayesboot", "data.frame"))
   expect_equal(nrow(b1), 1000)
   expect_equal(ncol(b1), 1)

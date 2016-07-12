@@ -48,6 +48,44 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
   abs(x - round(x)) < tol
 }
 
+# This is the core part of the bayesboot function that produces
+# the samples from the Bayesian bootstrap.
+bayesboot.sample <-
+  function(data, statistic, R, R2, use.weights, .progress = .progress,
+           .parallel = .parallel, ...) {
+  dirichlet.weights <- rudirichlet(R, NROW(data))
+
+  if(use.weights) {
+    boot.sample <- plyr::adply(
+      dirichlet.weights, 1, .progress = .progress, .parallel = .parallel, .id = NULL,
+      .fun = function(weights) {
+        statistic(data, weights, ...)
+      }
+    )
+
+  } else {
+    if(is.null(dim(data)) || length(dim(data)) < 2) { # data is a list type of object
+      boot.sample <- plyr::adply(
+        dirichlet.weights, 1, .progress = .progress, .parallel = .parallel, .id = NULL,
+        .fun = function(weights) {
+          data.sample <- sample(data, size = R2, replace = TRUE, prob = weights)
+          statistic(data.sample, ...)
+        }
+      )
+    } else { # assume data can be subsetted like a matrix or data.frame
+      boot.sample <- plyr::adply(
+        dirichlet.weights, 1, .progress = .progress, .parallel = .parallel, .id = NULL,
+        .fun = function(weights) {
+          index.sample <- sample(nrow(data), size = R2, replace = TRUE, prob = weights)
+          statistic(data[index.sample, ,drop = FALSE], ...)
+        }
+      )
+    }
+  }
+  boot.sample
+}
+
+
 
 #' The Bayesian bootstrap
 #'
@@ -220,9 +258,6 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
         stop(e)
       }
     )
-    # TODO: Should I add some more checks to stat.result? Like, that it contains no NA, values?
-    # or should I maybe do these tests to the final posterior samples and issue a varning if
-    # there are NAs, NULLs and similar?
 
   } else { # use.weights == FALSE
     if(length(R2) != 1 || is.na(R2) || !is.wholenumber(R2) || R2 < 1) {
@@ -246,35 +281,39 @@ bayesboot <- function(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
     ))
   }
 
-  dirichlet.weights <- rudirichlet(R, NROW(data))
-
-  if(use.weights) {
-    boot.sample <- plyr::adply(
-      dirichlet.weights, 1, .progress = .progress, .parallel = .parallel, .id = NULL,
-      .fun = function(weights) {
-        statistic(data, weights, ...)
-      }
-    )
-
-  } else {
-    if(is.null(dim(data)) || length(dim(data)) < 2) { # data is a list type of object
-      boot.sample <- plyr::adply(
-        dirichlet.weights, 1, .progress = .progress, .parallel = .parallel, .id = NULL,
-        .fun = function(weights) {
-          data.sample <- sample(data, size = R2, replace = TRUE, prob = weights)
-          statistic(data.sample, ...)
-        }
-      )
-    } else { # assume data can be subsetted like a matrix or data.frame
-      boot.sample <- plyr::adply(
-        dirichlet.weights, 1, .progress = .progress, .parallel = .parallel, .id = NULL,
-        .fun = function(weights) {
-          index.sample <- sample(nrow(data), size = R2, replace = TRUE, prob = weights)
-          statistic(data[index.sample, ,drop = FALSE], ...)
-        }
-      )
-    }
+  # Since we create the dirichlet weights in one go this can result in a
+  # large matrix. In order to not take up too much memory we are going to
+  # split up the sampling in batches allocating a smaller matrix for each batch.
+  mb_to_allocate <- 128
+  R_per_batch <- ceiling(mb_to_allocate / ( NROW(data) * 8 / 1000000))
+  if(R_per_batch > R ) {
+    R_per_batch <- R
   }
+  R_divisions <- rep(R_per_batch, R %/% R_per_batch)
+  if(sum(R_divisions) < R) {
+    R_divisions <- c(R_divisions, R - sum(R_divisions))
+  }
+
+  batch_progress <- "none"
+  if(length(R_divisions) > 1) {
+    batch_progress <- .progress
+    .progress <- "none"
+  }
+
+  batch_parallel <- FALSE
+  if(length(R_divisions) >= R_divisions[1]) {
+    batch_parallel <- .parallel
+    .parallel <- FALSE
+  }
+
+  boot.sample <- plyr::ldply(
+    R_divisions, .progress = batch_progress, .parallel = batch_parallel, .id = NULL,
+    .fun = function(R_per_batch) {
+      bayesboot.sample(data, statistic, R_per_batch, R2, use.weights,
+                       .progress = .progress, .parallel = .parallel, ...)
+    }
+  )
+
   class(boot.sample) <- c("bayesboot", class(boot.sample))
   attr(boot.sample, "statistic.label") <- statistic.label
   attr(boot.sample, "call") <- call
