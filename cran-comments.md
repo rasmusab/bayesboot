@@ -1,10 +1,5 @@
-## Resubmission
-This is a resubmission. In this version I have:
-
-* Fixed an invalid URL in README.md by removing parentheses that had been added by mistake.
-
 ## Test environments
-* local Ubuntu 32-bit 12.04 , R 3.2.4
+* local MacOS 10.12.6, R 3.4.2
 * win-builder (devel and release)
 
 ## R CMD check results
@@ -13,17 +8,9 @@ There were no ERRORs or WARNINGs.
 There was 1 NOTE:
 
 ```
-checking CRAN incoming feasibility ... NOTE
-Maintainer: ‘Rasmus Bååth <rasmus.baath@gmail.com>’
-New submission
-
-License components with restrictions and base license permitting such:
-  MIT + file LICENSE
-File 'LICENSE':
-  YEAR: 2016
-  COPYRIGHT HOLDER: Rasmus Bååth
+* checking CRAN incoming feasibility ... Note_to_CRAN_maintainers
+Maintainer: 'Rasmus Bååh <rasmus.baath@gmail.com>'
 ```
-  
   
 ## Downstream dependencies
 

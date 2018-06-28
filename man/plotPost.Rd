@@ -60,7 +60,7 @@ above this value.
 }
 \note{
 The origin of this function is
-  \href{http://cran.r-project.org/package=BEST}{the BEST
+  \href{https://cran.r-project.org/package=BEST}{the BEST
   package} which is based on Kruschke(2015, 2013).
 }
 \examples{
@@ -80,9 +80,6 @@ tst2 <- c(rnorm(1e5), rnorm(5e4, 7))
 plotPost(tst2)                  # A valid 95\% CrI, but not HDI
 plotPost(tst2, showCurve=TRUE)  # Correct 95\% HDI
 }
-\author{
-John Kruschke, modified by Mike Meredith
-}
 \references{
 Kruschke, J. K. (2015) \emph{Doing Bayesian data analysis, second
   edition: A tutorial with R, JAGS, and Stan.} Waltham, MA: Academic Press /
@@ -94,4 +91,6 @@ Kruschke, J. K. (2013) Bayesian estimation supersedes the t test.
 \seealso{
 For details of the HDI calculation, see \code{\link{hdi}}.
 }
-
+\author{
+John Kruschke, modified by Mike Meredith
+}

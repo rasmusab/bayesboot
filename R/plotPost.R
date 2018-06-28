@@ -40,7 +40,7 @@
 #'   plotting side-effect.
 #'
 #' @note The origin of this function is
-#'   \href{http://cran.r-project.org/package=BEST}{the BEST
+#'   \href{https://cran.r-project.org/package=BEST}{the BEST
 #'   package} which is based on Kruschke(2015, 2013).
 #'
 #' @author John Kruschke, modified by Mike Meredith

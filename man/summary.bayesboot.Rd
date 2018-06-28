@@ -26,4 +26,3 @@ highest density intervals and quantiles of the posterior marginals.
 \code{\link[HDInterval]{hdi}} in the HDInterval package for directly calculating
   highest density intervals from \code{bayesboot} objects.
 }
-

@@ -160,4 +160,3 @@ Miller, R. G. (1974) The jackknife - a review. \emph{Biometrika},
 Rubin, D. B. (1981). The Bayesian bootstrap. \emph{The annals of statistics},
 \bold{9(1)}, 130--134.
 }
-

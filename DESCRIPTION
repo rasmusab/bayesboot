@@ -1,8 +1,8 @@
 Package: bayesboot
 Type: Package
 Title: An Implementation of Rubin's (1981) Bayesian Bootstrap
-Version: 0.2.1
-Date: 2016-03-31
+Version: 0.2.2
+Date: 2018-06-28
 Authors@R: person("Rasmus", "Bååth", email = "rasmus.baath@gmail.com", role = c("aut", "cre"))
 Description: Functions for performing the Bayesian bootstrap as introduced by
     Rubin (1981) <doi:10.1214/aos/1176345338> and for summarizing the result.
@@ -13,13 +13,13 @@ License: MIT + file LICENSE
 LazyData: TRUE
 URL: https://github.com/rasmusab/bayesboot
 BugReports: https://github.com/rasmusab/bayesboot/issues
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Imports: plyr (>= 1.8.3),
   HDInterval(>= 0.1.1)
 Depends: R (>= 3.2.0)
 Suggests:
   testthat,
+  foreach,
   doParallel,
   boot
 Encoding: UTF-8
-

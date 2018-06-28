@@ -31,19 +31,19 @@ summary(b1)
 ## Number of posterior draws: 4000 
 ## 
 ## Summary of the posterior (with 95% Highest Density Intervals):
-##  statistic  mean    sd hdi.low hdi.high
-##         V1 184.5 1.154   182.3    186.9
+##  statistic     mean       sd  hdi.low hdi.high
+##         V1 184.4979 1.154456 182.3328  186.909
 ## 
 ## Quantiles:
-##  statistic q2.5%  q25% median  q75% q97.5%
-##         V1 182.3 183.7  184.5 185.2  186.9
+##  statistic    q2.5%    q25%   median     q75%   q97.5%
+##         V1 182.2621 183.742 184.4664 185.2378 186.8737
 ## 
 ## Call:
 ##  bayesboot(data = heights, statistic = mean)
 plot(b1)
 ```
 
-![](README-files/README-president_summary-1.png)
+![](man/figures/README-president_summary-1.png)
 
 While it is possible to use a summary statistic that works on a resample of the original data, it is more efficient if it's possible to use a summary statistic that works on a *reweighting* of the original dataset. Instead of using `mean` above it would be better to use `weighted.mean` like this:
 
@@ -58,7 +58,7 @@ The result of a call to `bayesboot` will always result in a `data.frame` with on
 # heights of American presidents is above the mean heights of
 # American males as given by www.cdc.gov/nchs/data/series/sr_11/sr11_252.pdf
 mean(c(b2[,1] > 175.9, TRUE, FALSE))
-## [1] 0.9998
+## [1] 0.9997501
 ```
 
 ### Comparing two groups
@@ -80,7 +80,7 @@ b_diff <- as.bayesboot(b_presidents - b_opponents)
 plot(b_diff)
 ```
 
-![](README-files/README-height_comparison-1.png)
+![](man/figures/README-height_comparison-1.png)
 
 So there is some evidence that loosing opponents could be shorter. (Though, I must add that it is quite unclear what the purpose really is with analyzing the heights of presidents and opponents...)
 
@@ -113,7 +113,7 @@ lines(cars$speed, colMeans(bb_loess, na.rm = TRUE), type ="l",
       col = "tomato", lwd = 4)
 ```
 
-![](README-files/README-car_plot-1.png)<!-- -->
+![](man/figures/README-car_plot-1.png)
 
 More information
 ----------------

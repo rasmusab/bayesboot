@@ -23,4 +23,3 @@ Produces histograms showing the marginal posterior distributions from a
 \code{bayesboot} call. Uses the \code{\link{plotPost}} function to produce
 the individual histograms.
 }
-

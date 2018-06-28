@@ -16,4 +16,3 @@
 \description{
 Print the first number of draws from the Bayesian bootstrap
 }
-
