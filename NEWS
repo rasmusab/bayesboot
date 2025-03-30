@@ -1,3 +1,8 @@
+bayesboot 0.2.3
+===================
+
+* Fixed issue with  Rd \link{} targets missing package anchors.
+
 bayesboot 0.2.2
 ===================
 
