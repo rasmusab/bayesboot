@@ -10,7 +10,6 @@ Description: Functions for performing the Bayesian bootstrap as introduced by
     weighted version of the data and summary statistics that works on a
     resampled data set.
 License: MIT + file LICENSE
-LazyData: TRUE
 URL: https://github.com/rasmusab/bayesboot
 BugReports: https://github.com/rasmusab/bayesboot/issues
 RoxygenNote: 7.3.2
