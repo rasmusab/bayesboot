@@ -4,8 +4,7 @@
 \alias{plot.bayesboot}
 \title{Plot the result of \code{bayesboot}}
 \usage{
-\method{plot}{bayesboot}(x, cred.mass = 0.95, plots.per.page = 3,
-  cex = 1.2, cex.lab = 1.3, ...)
+\method{plot}{bayesboot}(x, cred.mass = 0.95, plots.per.page = 3, cex = 1.2, cex.lab = 1.3, ...)
 }
 \arguments{
 \item{x}{The bayesboot object to plot.}

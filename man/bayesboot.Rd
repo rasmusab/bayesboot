@@ -4,8 +4,16 @@
 \alias{bayesboot}
 \title{The Bayesian bootstrap}
 \usage{
-bayesboot(data, statistic, R = 4000, R2 = 4000, use.weights = FALSE,
-  .progress = "none", .parallel = FALSE, ...)
+bayesboot(
+  data,
+  statistic,
+  R = 4000,
+  R2 = 4000,
+  use.weights = FALSE,
+  .progress = "none",
+  .parallel = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{Either a vector or a list, or a matrix or a data.frame with one

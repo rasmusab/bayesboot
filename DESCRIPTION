@@ -13,7 +13,7 @@ License: MIT + file LICENSE
 LazyData: TRUE
 URL: https://github.com/rasmusab/bayesboot
 BugReports: https://github.com/rasmusab/bayesboot/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 7.3.2
 Imports: plyr (>= 1.8.3),
   HDInterval(>= 0.1.1)
 Depends: R (>= 3.2.0)

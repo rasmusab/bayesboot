@@ -4,8 +4,16 @@
 \alias{plotPost}
 \title{Graphic display of a posterior probability distribution}
 \usage{
-plotPost(paramSampleVec, credMass = 0.95, compVal = NULL, ROPE = NULL,
-  HDItextPlace = 0.7, showMode = FALSE, showCurve = FALSE, ...)
+plotPost(
+  paramSampleVec,
+  credMass = 0.95,
+  compVal = NULL,
+  ROPE = NULL,
+  HDItextPlace = 0.7,
+  showMode = FALSE,
+  showCurve = FALSE,
+  ...
+)
 }
 \arguments{
 \item{paramSampleVec}{A vector of samples drawn from the target distribution.}
@@ -89,7 +97,7 @@ Kruschke, J. K. (2013) Bayesian estimation supersedes the t test.
   \emph{Journal of Experimental Psychology: General}, \bold{142(2)}, 573.
 }
 \seealso{
-For details of the HDI calculation, see \code{\link{hdi}}.
+For details of the HDI calculation, see \code{\link[HDInterval]{hdi}}.
 }
 \author{
 John Kruschke, modified by Mike Meredith

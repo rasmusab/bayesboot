@@ -44,7 +44,7 @@
 #'   package} which is based on Kruschke(2015, 2013).
 #'
 #' @author John Kruschke, modified by Mike Meredith
-#' @seealso For details of the HDI calculation, see \code{\link{hdi}}.
+#' @seealso For details of the HDI calculation, see \code{\link[HDInterval]{hdi}}.
 #' @examples
 #' # Generate some data
 #' tst <- rnorm(1e5, 3, 1)
@@ -82,7 +82,7 @@ plotPost <-
 
   # Deal with ... argument:
   dots <- list(...)
-  if(length(dots) == 1 && class(dots[[1]]) == "list")
+  if(length(dots) == 1 && is.list(dots[[1]]))
     dots <- dots[[1]]
   defaultArgs <- list(xlab=deparse(substitute(paramSampleVec)),
     yaxt="n", ylab="", main="", cex.lab=1.5,
