@@ -1,7 +1,9 @@
-`bayesboot`: Easy Bayesian Bootstrap in R
-=========================================
+# `bayesboot`: Easy Bayesian Bootstrap in R
 
-The `bayesboot` package implements a function `bayesboot` that performs the Bayesian bootstrap introduced by Rubin (1981). The implementation can both handle summary statistics that works on a weighted version of the data or that works on a resampled data set.
+The `bayesboot` package implements a function `bayesboot` that performs
+the Bayesian bootstrap introduced by Rubin (1981). The implementation
+can both handle summary statistics that works on a weighted version of
+the data or that works on a resampled data set.
 
 `bayesboot` is available on CRAN and can be installed in the usual way:
 
@@ -9,10 +11,10 @@ The `bayesboot` package implements a function `bayesboot` that performs the Baye
 install.packages("bayesboot")
 ```
 
-A simple example
-----------------
+## A simple example
 
-Here is a Bayesian bootstrap analysis of the mean height of the last ten American presidents:
+Here is a Bayesian bootstrap analysis of the mean height of the last ten
+American presidents:
 
 ``` r
 # Heights of the last ten American presidents in cm (Kennedy to Obama).
@@ -22,7 +24,8 @@ library(bayesboot)
 b1 <- bayesboot(heights, mean)
 ```
 
-The resulting posterior distribution in `b1` can now be `plot`ted and `summary`ized:
+The resulting posterior distribution in `b1` can now be `plot`ted and
+`summary`ized:
 
 ``` r
 summary(b1)
@@ -45,13 +48,21 @@ plot(b1)
 
 ![](man/figures/README-president_summary-1.png)
 
-While it is possible to use a summary statistic that works on a resample of the original data, it is more efficient if it's possible to use a summary statistic that works on a *reweighting* of the original dataset. Instead of using `mean` above it would be better to use `weighted.mean` like this:
+While it is possible to use a summary statistic that works on a resample
+of the original data, it is more efficient if it’s possible to use a
+summary statistic that works on a *reweighting* of the original dataset.
+Instead of using `mean` above it would be better to use `weighted.mean`
+like this:
 
 ``` r
 b2 <- bayesboot(heights, weighted.mean, use.weights = TRUE)
 ```
 
-The result of a call to `bayesboot` will always result in a `data.frame` with one column per dimension of the summary statistic. If the summary statistic does not return a named vector the columns will be called `V1`, `V2`, etc. The result of a `bayesboot` call can be further inspected and post processed. For example:
+The result of a call to `bayesboot` will always result in a `data.frame`
+with one column per dimension of the summary statistic. If the summary
+statistic does not return a named vector the columns will be called
+`V1`, `V2`, etc. The result of a `bayesboot` call can be further
+inspected and post processed. For example:
 
 ``` r
 # Given the model and the data, this is the probability that the mean
@@ -63,7 +74,13 @@ mean(c(b2[,1] > 175.9, TRUE, FALSE))
 
 ### Comparing two groups
 
-If we want to compare the means of two groups, we will have to call `bayesboot` twice with each dataset and then use the resulting samples to calculate the posterior difference. For example, let's say we have the heights of the opponents that lost to the presidents in `height` the first time those presidents were elected. Now we are interested in comparing the mean height of American presidents with the mean height of presidential candidates that lost.
+If we want to compare the means of two groups, we will have to call
+`bayesboot` twice with each dataset and then use the resulting samples
+to calculate the posterior difference. For example, let’s say we have
+the heights of the opponents that lost to the presidents in `height` the
+first time those presidents were elected. Now we are interested in
+comparing the mean height of American presidents with the mean height of
+presidential candidates that lost.
 
 ``` r
 # The heights of oponents of American presidents (first time they were elected).
@@ -82,12 +99,23 @@ plot(b_diff)
 
 ![](man/figures/README-height_comparison-1.png)
 
-So there is some evidence that loosing opponents could be shorter. (Though, I must add that it is quite unclear what the purpose really is with analyzing the heights of presidents and opponents...)
+So there is some evidence that loosing opponents could be shorter.
+(Though, I must add that it is quite unclear what the purpose really is
+with analyzing the heights of presidents and opponents…)
 
-A more advanced example
------------------------
+## A more advanced example
 
-A slightly more complicated example, where we do Bayesian bootstrap analysis of LOESS regression applied to the `cars` dataset on the speed of cars and the resulting distance it takes to stop. The `loess` function returns, among other things, a vector of `fitted` *y* values, one value for each *x* value in the data. These *y* values define the smoothed LOESS line and is what you would usually plot after having fitted a LOESS. Now we want to use the Bayesian bootstrap to gauge the uncertainty in the LOESS line. As the `loess` function accepts weighted data, we'll simply create a function that takes the data with weights and returns the `fitted` *y* values. We'll then plug that function into `bayesboot`:
+A slightly more complicated example, where we do Bayesian bootstrap
+analysis of LOESS regression applied to the `cars` dataset on the speed
+of cars and the resulting distance it takes to stop. The `loess`
+function returns, among other things, a vector of `fitted` *y* values,
+one value for each *x* value in the data. These *y* values define the
+smoothed LOESS line and is what you would usually plot after having
+fitted a LOESS. Now we want to use the Bayesian bootstrap to gauge the
+uncertainty in the LOESS line. As the `loess` function accepts weighted
+data, we’ll simply create a function that takes the data with weights
+and returns the `fitted` *y* values. We’ll then plug that function into
+`bayesboot`:
 
 ``` r
 boot_fn <- function(cars, weights) {
@@ -115,12 +143,19 @@ lines(cars$speed, colMeans(bb_loess, na.rm = TRUE), type ="l",
 
 ![](man/figures/README-car_plot-1.png)
 
-More information
-----------------
+## More information
 
-For more information on the Bayesian bootstrap see [Rubin's (1981) original paper](https://projecteuclid.org/euclid.aos/1176345338) and my blog post [The Non-parametric Bootstrap as a Bayesian Model](http://sumsar.net/blog/2015/04/the-non-parametric-bootstrap-as-a-bayesian-model/). The implementation of `bayesboot` is similar to the function outlined in the blog post [Easy Bayesian Bootstrap in R](http://sumsar.net/blog/2015/07/easy-bayesian-bootstrap-in-r/), but the interface is slightly different.
+For more information on the Bayesian bootstrap see [Rubin’s (1981)
+original paper](https://projecteuclid.org/euclid.aos/1176345338) and my
+blog post [The Non-parametric Bootstrap as a Bayesian
+Model](https://www.sumsar.net/blog/2015/04/the-non-parametric-bootstrap-as-a-bayesian-model/).
+The implementation of `bayesboot` is similar to the function outlined in
+the blog post [Easy Bayesian Bootstrap in
+R](https://www.sumsar.net/blog/2015/07/easy-bayesian-bootstrap-in-r/),
+but the interface is slightly different.
 
-References
-----------
+## References
 
-Rubin, D. B. (1981). The Bayesian bootstrap. *The annals of statistics*, 9(1), 130--134. [link to paper](https://projecteuclid.org/euclid.aos/1176345338)
+Rubin, D. B. (1981). The Bayesian bootstrap. *The annals of statistics*,
+9(1), 130–134. [link to
+paper](https://projecteuclid.org/euclid.aos/1176345338)

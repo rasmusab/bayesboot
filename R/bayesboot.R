@@ -71,12 +71,12 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'
 #' For more information regarding this implementation of the Bayesian bootstrap
 #' see the blog post
-#' \href{http://www.sumsar.net/blog/2015/07/easy-bayesian-bootstrap-in-r/}{Easy
+#' \href{https://www.sumsar.net/blog/2015/07/easy-bayesian-bootstrap-in-r/}{Easy
 #' Bayesian Bootstrap in R}. For more information about the model behind the
 #' Bayesian bootstrap see the blog post
-#' \href{http://www.sumsar.net/blog/2015/04/the-non-parametric-bootstrap-as-a-bayesian-model/}{The
+#' \href{https://www.sumsar.net/blog/2015/04/the-non-parametric-bootstrap-as-a-bayesian-model/}{The
 #' Non-parametric Bootstrap as a Bayesian Model} and, of course,
-#' \href{http://projecteuclid.org/euclid.aos/1176345338}{the original Bayesian
+#' \href{https://projecteuclid.org/euclid.aos/1176345338}{the original Bayesian
 #' bootstrap paper by Rubin (1981)}.
 #'
 #' @note \itemize{
